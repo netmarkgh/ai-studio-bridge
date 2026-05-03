@@ -1,0 +1,184 @@
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import { Invoice } from '../types';
+import { formatCurrency, cn } from '../lib/utils';
+import { 
+  Search, 
+  Filter, 
+  MoreHorizontal, 
+  Smartphone, 
+  Printer, 
+  Trash2,
+  ChevronDown
+} from 'lucide-react';
+
+export function HistoryView() {
+  const { profile, user } = useAuth();
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+
+  const isAdmin = profile?.role === 'admin';
+
+  useEffect(() => {
+    async function fetchInvoices() {
+      let q = supabase.from('invoices').select('*').order('created_at', { ascending: false });
+      if (!isAdmin) q = q.eq('user_id', user.id);
+      if (filter !== 'all') q = q.eq('status', filter);
+      
+      const { data } = await q;
+      setInvoices(data || []);
+      setLoading(false);
+    }
+    fetchInvoices();
+  }, [user.id, isAdmin, filter]);
+
+  const filteredInvoices = invoices.filter(inv => 
+    inv.client_name.toLowerCase().includes(search.toLowerCase()) ||
+    inv.inv_number.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const updateStatus = async (id: number, status: string) => {
+    const { error } = await supabase.from('invoices').update({ status }).eq('id', id);
+    if (!error) {
+      setInvoices(invoices.map(inv => inv.id === id ? { ...inv, status: status as any } : inv));
+    }
+  };
+
+  const deleteInvoice = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this invoice?')) return;
+    await supabase.from('invoice_items').delete().eq('invoice_id', id);
+    const { error } = await supabase.from('invoices').delete().eq('id', id);
+    if (!error) {
+      setInvoices(invoices.filter(inv => inv.id !== id));
+    }
+  };
+
+  const handleShareWA = (inv: Invoice) => {
+    const phone = (inv.client_phone || '').replace(/\D/g, '');
+    const msg = `Hello ${inv.client_name},\n\nReminder from *${inv.biz_name}*:\n\n*Invoice:* ${inv.inv_number}\n*Amount due:* ${formatCurrency(inv.total, inv.currency)}\n*Due date:* ${inv.due_date}\n\n*Payment via:* ${inv.pay_method} — ${inv.acc_number}\n\n— ${inv.biz_name}`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
+  return (
+    <div className="p-8 max-w-6xl mx-auto">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-ink">Invoice History</h1>
+          <p className="text-ink/40 text-sm mt-1">{filteredInvoices.length} invoices found</p>
+        </div>
+        <div className="flex gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/30" />
+            <input 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by client or #"
+              className="pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand w-64"
+            />
+          </div>
+          <div className="relative group">
+             <button className="px-4 py-2 bg-white border border-black/5 rounded-xl text-sm font-semibold flex items-center gap-2">
+               <Filter className="w-4 h-4 text-ink/30" />
+               <span className="capitalize">{filter}</span>
+               <ChevronDown className="w-3 h-3 text-ink/30" />
+             </button>
+             <div className="absolute right-0 top-full mt-2 w-40 bg-white border border-black/5 rounded-xl shadow-xl z-20 overflow-hidden opacity-0 invisible group-focus-within:visible group-focus-within:opacity-100 transition-all">
+               {['all', 'paid', 'unpaid', 'overdue', 'draft'].map(s => (
+                 <button 
+                  key={s} 
+                  onClick={() => setFilter(s)}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-paper capitalize"
+                 >
+                   {s}
+                 </button>
+               ))}
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-paper border-b border-black/5">
+              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Invoice</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Client</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Date / Due</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-right">Amount</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-center">Status</th>
+              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-black/5">
+            {loading ? (
+              <tr><td colSpan={6} className="px-6 py-20 text-center text-ink/20 animate-pulse font-bold">Loading records...</td></tr>
+            ) : filteredInvoices.length === 0 ? (
+              <tr><td colSpan={6} className="px-6 py-20 text-center text-ink/30 italic">No records to display.</td></tr>
+            ) : (
+              filteredInvoices.map((inv) => (
+                <tr key={inv.id} className="hover:bg-paper/40 transition-colors group">
+                  <td className="px-6 py-4">
+                    <div className="font-mono text-[10px] font-bold text-brand">{inv.inv_number}</div>
+                    {isAdmin && <div className="text-[10px] text-ink/30 mt-0.5">{inv.biz_name}</div>}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="font-semibold text-sm">{inv.client_name}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-xs text-ink/60">{inv.inv_date}</div>
+                    <div className="text-[10px] text-ink/30 mt-0.5 font-bold">Due: {inv.due_date}</div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="font-bold font-mono text-sm">{formatCurrency(inv.total, inv.currency)}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-center">
+                      <span className={cn(
+                        "text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md",
+                        inv.status === 'paid' ? 'bg-brand/10 text-brand' : 
+                        inv.status === 'overdue' ? 'bg-red-500/10 text-red-500' : 
+                        'bg-amber-500/10 text-amber-500'
+                      )}>
+                        {inv.status}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                         onClick={() => handleShareWA(inv)}
+                         title="Share WhatsApp"
+                         className="p-1.5 text-[#25D366] hover:bg-paper rounded-lg transition-colors"
+                      >
+                         <Smartphone className="w-4 h-4" />
+                      </button>
+                      <button 
+                        title="Print PDF"
+                        className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors"
+                      >
+                         <Printer className="w-4 h-4" />
+                      </button>
+                      <div className="relative group/menu">
+                        <button className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors">
+                           <MoreHorizontal className="w-4 h-4" />
+                        </button>
+                        <div className="absolute right-0 bottom-full mb-2 w-32 bg-white border border-black/5 rounded-xl shadow-xl z-30 overflow-hidden opacity-0 invisible group-hover/menu:visible group-hover/menu:opacity-100 transition-all border-black/5">
+                           <button onClick={() => updateStatus(inv.id, 'paid')} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-paper">Mark Paid</button>
+                           <button onClick={() => updateStatus(inv.id, 'unpaid')} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 hover:bg-paper">Mark Unpaid</button>
+                           <button onClick={() => deleteInvoice(inv.id)} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-paper border-t border-black/5">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

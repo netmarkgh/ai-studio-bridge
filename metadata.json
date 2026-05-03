@@ -1,0 +1,6 @@
+{
+  "name": "NMG Invoice Platform",
+  "description": "A professional community invoice platform for Net-Marketing Ghana members with automated PDF generation and WhatsApp integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["auth", "billing", "dashboard"]
+}
