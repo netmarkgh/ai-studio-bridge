@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../lib/utils';
-import { Camera, Save, Lock, LayoutGrid, CreditCard, Eye, EyeOff } from 'lucide-react';
+import { Camera, Save, Lock, LayoutGrid, CreditCard, Eye, EyeOff, Image as ImageIcon } from 'lucide-react';
 
 export function SettingsView() {
   const { profile, user, refreshProfile } = useAuth();

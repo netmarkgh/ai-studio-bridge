@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Profile } from '../types';
 import { formatCurrency, cn, getInitials } from '../lib/utils';
+import { motion } from 'motion/react';
 import { 
   Users, 
   CheckCircle, 
@@ -11,7 +12,8 @@ import {
   Shield, 
   Key, 
   ArrowUpRight,
-  TrendingUp
+  TrendingUp,
+  Clock
 } from 'lucide-react';
 
 export function AdminView() {
@@ -235,5 +237,3 @@ export function AdminView() {
     </div>
   );
 }
-
-const Clock = ({ className }: { className?: string }) => <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;

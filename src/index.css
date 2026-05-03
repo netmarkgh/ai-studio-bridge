@@ -17,3 +17,26 @@
     @apply bg-paper text-ink font-sans;
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-shadow-none {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  @page {
+    margin: 0;
+  }
+}
+
+.print-only {
+  display: none;
+}

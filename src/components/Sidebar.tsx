@@ -37,7 +37,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   }
 
   return (
-    <aside className="w-64 bg-white border-r border-black/5 flex flex-col h-screen overflow-hidden">
+    <aside className="w-64 bg-white border-r border-black/5 flex flex-col h-screen overflow-hidden no-print">
       {/* Brand */}
       <div className="p-6 border-b border-black/5 flex items-center gap-3">
         <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center text-white font-bold text-lg overflow-hidden shrink-0 shadow-lg shadow-brand/20">

@@ -173,7 +173,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
 
   return (
     <div className="p-8 max-w-7xl mx-auto pb-24">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 no-print">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink">New Invoice</h1>
           <p className="text-ink/40 text-sm mt-1">Fill in the details to generate a professional invoice.</p>
@@ -185,8 +185,11 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
           >
             <Smartphone className="w-4 h-4" /> WhatsApp
           </button>
-          <button className="bg-white border border-black/5 text-ink px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-paper transition-colors">
-            <FileText className="w-4 h-4" /> PDF Preview
+          <button 
+            onClick={() => window.print()}
+            className="bg-white border border-black/5 text-ink px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-paper transition-colors"
+          >
+            <FileText className="w-4 h-4" /> Print / Save PDF
           </button>
           <button 
             onClick={handleSave}
@@ -201,7 +204,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
         {/* Editor Side */}
-        <div className="space-y-6">
+        <div className="space-y-6 no-print">
           {/* Section: Client */}
           <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm space-y-4">
             <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2">Billed To — Client</div>
@@ -411,7 +414,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
             </div>
           </div>
           
-          <div className="bg-white border border-black/5 aspect-[1/1.414] shadow-2xl rounded-2xl p-10 font-sans overflow-hidden">
+          <div className="bg-white border border-black/5 aspect-[1/1.414] shadow-2xl rounded-2xl p-10 font-sans overflow-hidden print-shadow-none print:w-full print:border-none">
              {/* Header */}
              <div className="flex justify-between items-start border-b-[2.5px] border-brand pb-6 mb-6">
                <div className="flex gap-4">

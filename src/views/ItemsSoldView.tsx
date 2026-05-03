@@ -22,7 +22,11 @@ export function ItemsSoldView() {
       if (error) return;
       
       // Filter out mismatches from join
-      setData(rows.filter(r => r.invoices && (isAdmin || r.invoices.user_id === user.id)));
+      const formatted = (rows || []).map((r: any) => ({
+        ...r,
+        invoices: Array.isArray(r.invoices) ? r.invoices[0] : r.invoices
+      }));
+      setData(formatted.filter(r => r.invoices && (isAdmin || r.invoices.user_id === user?.id)));
       setLoading(false);
     }
     fetchItems();

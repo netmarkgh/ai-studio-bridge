@@ -10,8 +10,10 @@ import {
   Smartphone, 
   Printer, 
   Trash2,
-  ChevronDown
+  ChevronDown,
+  Eye
 } from 'lucide-react';
+import { InvoicePreviewModal } from '../components/InvoicePreviewModal';
 
 export function HistoryView() {
   const { profile, user } = useAuth();
@@ -19,6 +21,7 @@ export function HistoryView() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   const isAdmin = profile?.role === 'admin';
 
@@ -149,6 +152,13 @@ export function HistoryView() {
                   <td className="px-6 py-4">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button 
+                         onClick={() => setSelectedInvoice(inv)}
+                         title="View Invoice"
+                         className="p-1.5 text-brand hover:bg-paper rounded-lg transition-colors"
+                      >
+                         <Eye className="w-4 h-4" />
+                      </button>
+                      <button 
                          onClick={() => handleShareWA(inv)}
                          title="Share WhatsApp"
                          className="p-1.5 text-[#25D366] hover:bg-paper rounded-lg transition-colors"
@@ -156,6 +166,7 @@ export function HistoryView() {
                          <Smartphone className="w-4 h-4" />
                       </button>
                       <button 
+                        onClick={() => setSelectedInvoice(inv)}
                         title="Print PDF"
                         className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors"
                       >
@@ -179,6 +190,10 @@ export function HistoryView() {
           </tbody>
         </table>
       </div>
+      <InvoicePreviewModal 
+        invoice={selectedInvoice} 
+        onClose={() => setSelectedInvoice(null)} 
+      />
     </div>
   );
 }
