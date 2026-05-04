@@ -39,6 +39,8 @@ export function Dashboard({ onNewInvoice, onViewHistory }: { onNewInvoice: () =>
   const h = new Date().getHours();
   const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
 
+  const canShowRevenue = isAdmin || profile?.permissions?.includes('can_access_revenue_reports');
+
   return (
     <div className="p-8 max-w-6xl mx-auto">
       <div className="no-print">
@@ -60,25 +62,37 @@ export function Dashboard({ onNewInvoice, onViewHistory }: { onNewInvoice: () =>
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-          {metrics.map((m, i) => (
-            <motion.div 
-              key={m.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow group"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-paper rounded-lg group-hover:bg-brand/5 transition-colors">
-                  <m.icon className="w-5 h-5 text-ink/40 group-hover:text-brand" />
+        {canShowRevenue ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            {metrics.map((m, i) => (
+              <motion.div 
+                key={m.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow group"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2 bg-paper rounded-lg group-hover:bg-brand/5 transition-colors">
+                    <m.icon className="w-5 h-5 text-ink/40 group-hover:text-brand" />
+                  </div>
                 </div>
-              </div>
-              <div className="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-1.5">{m.label}</div>
-              <div className={cn("text-xl font-bold font-mono tracking-tight", m.color)}>{m.value}</div>
-            </motion.div>
-          ))}
-        </div>
+                <div className="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-1.5">{m.label}</div>
+                <div className={cn("text-xl font-bold font-mono tracking-tight", m.color)}>{m.value}</div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-amber-50 border border-amber-200 p-6 rounded-2xl mb-10 flex items-center gap-4">
+             <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                <Clock className="w-5 h-5" />
+             </div>
+             <div>
+                <div className="text-sm font-bold text-amber-800">Revenue stats restricted</div>
+                <div className="text-xs text-amber-700/60 font-medium">Contact administrator to enable revenue reporting permissions.</div>
+             </div>
+          </div>
+        )}
 
         {/* Recent Invoices */}
         <div className="space-y-4">

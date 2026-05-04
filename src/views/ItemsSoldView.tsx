@@ -12,8 +12,10 @@ export function ItemsSoldView() {
   const [groupBy, setGroupBy] = useState<'item' | 'client'>('item');
 
   const isAdmin = profile?.role === 'admin';
+  const canManageItems = isAdmin || profile?.permissions?.includes('can_manage_items');
 
   useEffect(() => {
+    if (!canManageItems) return;
     async function fetchItems() {
       let q = supabase.from('invoice_items').select('description, quantity, unit_price, amount, invoices(user_id, client_name, inv_number, inv_date, currency)');
       if (!isAdmin) q = q.eq('invoices.user_id', user.id);
@@ -108,6 +110,20 @@ export function ItemsSoldView() {
       ));
     }
   };
+
+  if (!canManageItems) {
+    return (
+      <div className="p-20 text-center">
+        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6">
+          <Package className="w-10 h-10" />
+        </div>
+        <h1 className="text-2xl font-bold text-ink mb-2">Access Restricted</h1>
+        <p className="text-ink/40 max-w-sm mx-auto">
+          You do not have the <span className="font-bold text-ink/60">can_manage_items</span> permission required to view the items sold report. Please contact your administrator.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-6xl mx-auto">

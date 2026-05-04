@@ -27,10 +27,14 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'new-invoice', label: 'New Invoice', icon: FilePlus2 },
     { id: 'history', label: 'History', icon: History },
-    { id: 'clients', label: 'Clients', icon: Users },
-    { id: 'items', label: 'Items Sold', icon: TrendingUp },
+    { id: 'clients', label: 'Clients', icon: Users, permission: 'can_manage_clients' },
+    { id: 'items', label: 'Items Sold', icon: TrendingUp, permission: 'can_manage_items' },
     { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+  ].filter(item => {
+    if (profile?.role === 'admin') return true;
+    if (!item.permission) return true;
+    return profile?.permissions?.includes(item.permission);
+  });
 
   if (profile?.role === 'admin') {
     menuItems.push({ id: 'admin', label: 'Admin Panel', icon: ShieldCheck });

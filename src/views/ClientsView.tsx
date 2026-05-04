@@ -3,14 +3,17 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Client } from '../types';
 import { getInitials } from '../lib/utils';
-import { Plus, Search, Mail, Phone, MapPin, Trash2, FilePlus } from 'lucide-react';
+import { Plus, Search, Mail, Phone, MapPin, Trash2, FilePlus, Users } from 'lucide-react';
 
 export function ClientsView({ onNewInvoiceFor }: { onNewInvoiceFor: (name: string) => void }) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showAdd, setShowAdd] = useState(false);
+
+  const isAdmin = profile?.role === 'admin';
+  const canManageClients = isAdmin || profile?.permissions?.includes('can_manage_clients');
 
   // New Client Form
   const [newClient, setNewClient] = useState({
@@ -18,8 +21,9 @@ export function ClientsView({ onNewInvoiceFor }: { onNewInvoiceFor: (name: strin
   });
 
   useEffect(() => {
+    if (!canManageClients) return;
     fetchClients();
-  }, [user.id]);
+  }, [user.id, canManageClients]);
 
   async function fetchClients() {
     const { data } = await supabase.from('clients').select('*').eq('user_id', user.id).order('name');
@@ -44,6 +48,20 @@ export function ClientsView({ onNewInvoiceFor }: { onNewInvoiceFor: (name: strin
   }
 
   const filtered = clients.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
+
+  if (!canManageClients) {
+    return (
+      <div className="p-20 text-center">
+        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-500 mx-auto mb-6">
+          <Users className="w-10 h-10" />
+        </div>
+        <h1 className="text-2xl font-bold text-ink mb-2">Access Restricted</h1>
+        <p className="text-ink/40 max-w-sm mx-auto">
+          You do not have the <span className="font-bold text-ink/60">can_manage_clients</span> permission required to view the customer book.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 max-w-6xl mx-auto no-print">
