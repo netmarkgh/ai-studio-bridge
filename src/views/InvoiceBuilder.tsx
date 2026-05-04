@@ -504,18 +504,17 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
              {/* Parties */}
              <div className="grid grid-cols-2 gap-8 mb-8">
                <div>
-                 <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2">Bill To</div>
+                 <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2">BILLED TO</div>
                  <div className="font-bold text-sm text-ink">{form.clientName || '—'}</div>
-                 <div className="text-[10px] text-ink/50 mt-1">{form.clientEmail}</div>
-                 <div className="text-[10px] text-ink/50">{form.clientPhone}</div>
+                 <div className="text-[10px] text-ink/50 mt-1">{form.clientPhone}</div>
                  <div className="text-[10px] text-ink/50">{form.clientAddress}</div>
                </div>
                <div className="text-right">
-                 <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2">Due Date</div>
+                 <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2">DUE DATE</div>
                  <div className="font-bold text-sm text-ink">{form.dueDate}</div>
                  {form.reference && (
                   <>
-                    <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2 mt-4">Reference</div>
+                    <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2 mt-4">REFERENCE</div>
                     <div className="text-xs text-ink/60">{form.reference}</div>
                   </>
                  )}
@@ -526,10 +525,10 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
              <table className="w-full text-left border-collapse mb-6">
                 <thead>
                   <tr className="border-b border-black/5">
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider">Item</th>
+                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider">Description</th>
                     <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-12">Qty</th>
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24">Price</th>
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24">Total</th>
+                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24">Unit Price</th>
+                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24 text-brand">Amount</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/5">
@@ -537,8 +536,8 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                     <tr key={idx}>
                       <td className="py-3 text-[11px] font-medium text-ink pr-4">{it.description || '—'}</td>
                       <td className="py-3 text-[11px] text-ink text-right">{it.quantity}</td>
-                      <td className="py-3 text-[11px] text-ink text-right font-mono">{formatCurrency(it.unit_price || 0, form.currency)}</td>
-                      <td className="py-3 text-[11px] text-ink text-right font-mono font-bold">{formatCurrency(it.amount || 0, form.currency)}</td>
+                      <td className="py-3 text-[11px] text-ink text-right">{formatCurrency(it.unit_price || 0, form.currency)}</td>
+                      <td className="py-3 text-[11px] text-brand text-right font-bold">{formatCurrency(it.amount || 0, form.currency)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -569,19 +568,19 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
              </div>
 
              {/* Footer Pay Info */}
-             <div className="bg-paper rounded-xl p-4 text-xs space-y-1.5 mb-6">
-                <div className="text-[8px] font-bold uppercase tracking-widest text-ink/30">Payment Info</div>
+             <div className="py-4 border-b border-black/5 text-xs mb-8">
+                <div className="text-[8px] font-bold uppercase tracking-widest text-ink/30 mb-2">PAYMENT VIA</div>
                 <div className="font-bold text-ink">{form.payMethod}</div>
-                <div className="font-mono text-ink/60 text-[10px]">{form.accNumber}</div>
-                <div className="text-[10px] text-ink/40">{form.accName}</div>
+                {form.accNumber && <div className="text-ink/60 text-[10px] mt-1">{form.accNumber} ({form.accName})</div>}
              </div>
 
-             <div className="mt-auto border-t border-black/5 pt-6 flex justify-between items-end">
-               <div className="text-[10px] text-ink/40 leading-relaxed max-w-[280px]">
-                 {form.note}
+             <div className="mt-auto pt-4 flex justify-between items-end">
+               <div className="space-y-1">
+                 <div className="text-[10px] text-ink/40">Thank you for your business!</div>
+                 <div className="text-[10px] text-ink/40">Payment due within 7 days.</div>
                </div>
                <div className="text-[8px] font-mono text-ink/20 text-right uppercase tracking-widest">
-                 Generated via Net-Marketing Ghana Platform
+                 Generated by Net-Marketing Ghana(NMG)
                </div>
              </div>
           </div>

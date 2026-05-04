@@ -95,19 +95,18 @@ export function InvoicePreviewModal({ invoice, onClose }: InvoicePreviewModalPro
                 {/* Info Grid */}
                 <div className="grid grid-cols-2 gap-12 mb-12">
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-ink/20 mb-3 border-b border-black/5 pb-1 w-fit">Billed To</div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-ink/30 mb-2">BILLED TO</div>
                     <div className="font-bold text-base text-ink">{invoice.client_name}</div>
-                    <div className="text-xs text-ink/50 mt-2 font-medium">{invoice.client_email}</div>
-                    <div className="text-xs text-ink/50 mt-0.5">{invoice.client_phone}</div>
-                    <div className="text-xs text-ink/40 mt-1.5 leading-relaxed">{invoice.client_address}</div>
+                    <div className="text-xs text-ink/50 mt-1">{invoice.client_phone}</div>
+                    <div className="text-xs text-ink/40 mt-1 leading-relaxed">{invoice.client_address}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-ink/20 mb-3 border-b border-black/5 pb-1 w-fit ml-auto">Due Date</div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-ink/30 mb-2">DUE DATE</div>
                     <div className="font-bold text-base text-ink">{new Date(invoice.due_date).toLocaleDateString()}</div>
                     
                     {invoice.reference && (
                       <div className="mt-8">
-                        <div className="text-[10px] font-bold uppercase tracking-widest text-ink/20 mb-1 border-b border-black/5 pb-1 w-fit ml-auto">Reference</div>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-ink/30 mb-1">REFERENCE</div>
                         <div className="text-xs font-mono text-ink/60">{invoice.reference}</div>
                       </div>
                     )}
@@ -117,20 +116,20 @@ export function InvoicePreviewModal({ invoice, onClose }: InvoicePreviewModalPro
                 {/* Items Table */}
                 <table className="w-full text-left border-collapse mb-10">
                   <thead>
-                    <tr className="border-b-2 border-black/5 text-ink/30">
-                      <th className="py-3 text-[10px] font-bold uppercase tracking-wider">Line Item</th>
+                    <tr className="border-b border-black/10 text-ink/40">
+                      <th className="py-3 text-[10px] font-bold uppercase tracking-wider">Description</th>
                       <th className="py-3 text-[10px] font-bold uppercase tracking-wider text-right w-16">Qty</th>
                       <th className="py-3 text-[10px] font-bold uppercase tracking-wider text-right w-28">Unit Price</th>
-                      <th className="py-3 text-[10px] font-bold uppercase tracking-wider text-right w-28">Total</th>
+                      <th className="py-3 text-[10px] font-bold uppercase tracking-wider text-right w-28 text-brand">Amount</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-black/5">
+                  <tbody>
                     {items.map((it, idx) => (
-                      <tr key={idx} className="text-ink">
+                      <tr key={idx} className="text-ink border-b border-black/5 last:border-0">
                         <td className="py-4 text-sm font-medium pr-6">{it.description}</td>
                         <td className="py-4 text-sm text-right">{it.quantity}</td>
-                        <td className="py-4 text-sm text-right font-mono">{formatCurrency(it.unit_price, invoice.currency)}</td>
-                        <td className="py-4 text-sm text-right font-mono font-bold">{formatCurrency(it.amount, invoice.currency)}</td>
+                        <td className="py-4 text-sm text-right">{formatCurrency(it.unit_price, invoice.currency)}</td>
+                        <td className="py-4 text-sm text-right font-bold text-brand">{formatCurrency(it.amount, invoice.currency)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -161,24 +160,19 @@ export function InvoicePreviewModal({ invoice, onClose }: InvoicePreviewModalPro
                 </div>
 
                 {/* Footer Pay Info */}
-                <div className="bg-paper/80 rounded-2xl p-6 text-xs mb-10 flex justify-between items-center border border-black/5">
-                  <div className="space-y-1">
-                    <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-1">Pay To:</div>
-                    <div className="font-bold text-sm text-brand">{invoice.pay_method}</div>
-                    <div className="font-mono text-ink/60 text-sm font-bold">{invoice.acc_number}</div>
-                    <div className="text-[10px] text-ink/40 font-medium uppercase tracking-tight">{invoice.acc_name}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[10px] font-bold text-ink/40 italic">Please include INV number in reference.</div>
-                  </div>
+                <div className="py-6 border-b border-black/5 text-xs mb-8">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-ink/30 mb-2">PAYMENT VIA</div>
+                  <div className="font-bold text-sm text-ink">{invoice.pay_method}</div>
+                  {invoice.acc_number && <div className="text-ink/60 mt-1">{invoice.acc_number} ({invoice.acc_name})</div>}
                 </div>
 
-                <div className="mt-auto border-t border-black/5 pt-8 flex justify-between items-end">
-                  <div className="text-[10px] text-ink/40 leading-relaxed max-w-[360px] italic">
-                    {invoice.note || 'Thank you for your business. Please pay within the due date to avoid service interruption.'}
+                <div className="mt-auto pt-4 flex justify-between items-end">
+                  <div className="space-y-1">
+                    <div className="text-[10px] text-ink/40">Thank you for your business!</div>
+                    <div className="text-[10px] text-ink/40">Payment due within 7 days.</div>
                   </div>
-                  <div className="text-[9px] font-mono text-ink/10 text-right uppercase tracking-[0.3em]">
-                    Net-Marketing Ghana Invoice System
+                  <div className="text-[9px] text-ink/20 text-right uppercase">
+                    Generated by Net-Marketing Ghana(NMG)
                   </div>
                 </div>
               </div>
