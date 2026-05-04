@@ -101,7 +101,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
 
     try {
       const { count } = await supabase.from('invoices').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
-      const invNumber = `INV-${String((count || 0) + 1).padStart(4, '0')}`;
+      const invNumber = `NMG-${String((count || 0)).padStart(4, '0')}`;
 
       const { data: inv, error: invError } = await supabase.from('invoices').insert({
         user_id: user.id,
@@ -209,7 +209,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
         <div className="space-y-6 no-print">
           {/* Section: Client */}
           <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm space-y-4">
-            <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2">Billed To — Client</div>
+            <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2">Bill To — Client</div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Client Name</label>
@@ -230,25 +230,25 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                     }
                   }}
                   className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
-                  placeholder="Who are you billing?"
+                  placeholder="Client Name"
                 />
                 <datalist id="clients-list">
                   {clients.map(c => <option key={c.id} value={c.name} />)}
                 </datalist>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Phone (WhatsApp)</label>
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Client Phone (WhatsApp)</label>
                 <input 
                   value={form.clientPhone}
                   onChange={(e) => setForm(prev => ({ ...prev, clientPhone: e.target.value }))}
                   className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
-                  placeholder="+233..."
+                  placeholder="Client Phone"
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Email</label>
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Client Email</label>
                 <input 
                   value={form.clientEmail}
                   onChange={(e) => setForm(prev => ({ ...prev, clientEmail: e.target.value }))}
@@ -257,14 +257,76 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Address</label>
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Client Address</label>
                 <input 
                   value={form.clientAddress}
                   onChange={(e) => setForm(prev => ({ ...prev, clientAddress: e.target.value }))}
                   className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
-                  placeholder="City, Street"
+                  placeholder="Client Address"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Section: Invoice Details */}
+          <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm space-y-4">
+            <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2">Invoice Details</div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Invoice Date</label>
+                <input 
+                  type="date"
+                  value={form.invDate}
+                  onChange={(e) => setForm(prev => ({ ...prev, invDate: e.target.value }))}
+                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Due Date</label>
+                <input 
+                  type="date"
+                  value={form.dueDate}
+                  onChange={(e) => setForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Currency</label>
+                <select 
+                  value={form.currency}
+                  onChange={(e) => setForm(prev => ({ ...prev, currency: e.target.value }))}
+                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                >
+                  <option value="GHS">GHS</option>
+                  <option value="USD">USD</option>
+                  <option value="GBP">GBP</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Status</label>
+                <select 
+                  value={form.status}
+                  onChange={(e) => setForm(prev => ({ ...prev, status: e.target.value as any }))}
+                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                >
+                  <option value="unpaid">Unpaid</option>
+                  <option value="paid">Paid</option>
+                  <option value="overdue">Overdue</option>
+                  <option value="draft">Draft</option>
+                </select>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Reference / PO Number</label>
+              <input 
+                value={form.reference}
+                onChange={(e) => setForm(prev => ({ ...prev, reference: e.target.value }))}
+                className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                placeholder="NMGConnects"
+              />
             </div>
           </div>
 
@@ -292,7 +354,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                     />
                   </div>
                   <div className="space-y-1">
-                    {index === 0 && <label className="text-[9px] font-bold text-ink/40 uppercase ml-1 text-right">Price</label>}
+                    {index === 0 && <label className="text-[9px] font-bold text-ink/40 uppercase ml-1 text-right">Unit Price</label>}
                     <input 
                       type="number"
                       value={item.unit_price}
@@ -311,12 +373,14 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                   </button>
                 </div>
               ))}
-              <button 
-                onClick={addItem}
-                className="w-full py-2.5 border border-dashed border-black/10 rounded-xl text-xs font-semibold text-brand hover:bg-brand/5 hover:border-brand/40 transition-all"
-              >
-                + Add Another Item
-              </button>
+              <div className="flex justify-center pt-2">
+                <button 
+                  onClick={addItem}
+                  className="text-brand text-xs font-bold hover:underline"
+                >
+                  + Add line item
+                </button>
+              </div>
             </div>
 
             {/* Summary */}
@@ -339,7 +403,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                     onChange={(e) => setForm(prev => ({ ...prev, discountType: e.target.value as any }))}
                     className="px-1 py-1 bg-paper border border-black/5 rounded-md text-[10px] focus:outline-none"
                   >
-                    <option value="pct">%</option>
+                    <option value="pct">% perc</option>
                     <option value="flat">Fixed</option>
                   </select>
                 </div>
@@ -380,6 +444,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                     <option>Vodafone Cash</option>
                     <option>Bank Transfer</option>
                     <option>Paystack Link</option>
+                    <option>Cash</option>
                   </select>
                 </div>
                 <div className="space-y-1">
@@ -431,7 +496,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                </div>
                <div className="text-right">
                  <div className="bg-brand-light text-brand px-3 py-1 rounded-md text-[10px] font-bold tracking-widest inline-block">INVOICE</div>
-                 <div className="font-mono text-[11px] text-ink/40 mt-1.5 uppercase tracking-tighter">INV-Draft</div>
+                 <div className="font-mono text-[11px] text-ink/40 mt-1.5 uppercase tracking-tighter">NMG-0000</div>
                  <div className="text-[10px] text-ink/40 mt-0.5">{form.invDate}</div>
                </div>
              </div>
