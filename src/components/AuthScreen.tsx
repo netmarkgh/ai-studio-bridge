@@ -3,8 +3,8 @@ import { supabase } from '../lib/supabase';
 import { motion } from 'motion/react';
 import { Eye, EyeOff } from 'lucide-react';
 
-export function AuthScreen() {
-  const [mode, setMode] = useState<'login' | 'register' | 'reset'>('login');
+export function AuthScreen({ initialMode = 'login' }: { initialMode?: 'login' | 'register' | 'reset' | 'update' }) {
+  const [mode, setMode] = useState<'login' | 'register' | 'reset' | 'update'>(initialMode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -52,6 +52,13 @@ export function AuthScreen() {
         });
         if (resetError) throw resetError;
         setSuccess('Password reset link sent! Check your email.');
+      } else if (mode === 'update') {
+        const { error: updateError } = await supabase.auth.updateUser({
+          password: password,
+        });
+        if (updateError) throw updateError;
+        setSuccess('Password updated successfully! You can now use your new password.');
+        setTimeout(() => window.location.reload(), 2000);
       }
     } catch (err: any) {
       setError(err.message);
@@ -78,7 +85,7 @@ export function AuthScreen() {
 
         <div className="bg-[#1a1a17] border border-white/10 rounded-2xl p-8 shadow-2xl">
           <h2 className="text-xl font-medium text-white mb-6">
-            {mode === 'register' ? 'Create your account' : mode === 'reset' ? 'Recover account' : 'Sign in'}
+            {mode === 'register' ? 'Create your account' : mode === 'reset' ? 'Recover account' : mode === 'update' ? 'Set new password' : 'Sign in'}
           </h2>
 
           {error && (
@@ -123,22 +130,27 @@ export function AuthScreen() {
               </>
             )}
 
-            <div>
-              <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5 ml-1">Email</label>
-              <input 
-                type="email" 
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand transition-colors"
-                placeholder="you@email.com"
-              />
-            </div>
+            {mode !== 'update' && (
+              <div>
+                <label className="block text-[11px] text-white/40 uppercase tracking-wider mb-1.5 ml-1">Email</label>
+                <input 
+                  type="email" 
+                  required
+                  value={email}
+                  disabled={mode === 'update'}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand transition-colors disabled:opacity-50"
+                  placeholder="you@email.com"
+                />
+              </div>
+            )}
 
             {mode !== 'reset' && (
               <div>
                 <div className="flex justify-between items-center mb-1.5 px-1">
-                  <label className="block text-[11px] text-white/40 uppercase tracking-wider">Password</label>
+                  <label className="block text-[11px] text-white/40 uppercase tracking-wider">
+                    {mode === 'update' ? 'New Password' : 'Password'}
+                  </label>
                   {mode === 'login' && (
                     <button 
                       type="button"
@@ -174,7 +186,7 @@ export function AuthScreen() {
               className="w-full bg-brand text-white font-medium py-3 rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-2 shadow-lg shadow-brand/20"
             >
               {loading && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-              {mode === 'register' ? 'Create Account' : mode === 'reset' ? 'Send Recovery Link' : 'Sign In'}
+              {mode === 'register' ? 'Create Account' : mode === 'reset' ? 'Send Recovery Link' : mode === 'update' ? 'Update Password' : 'Sign In'}
             </button>
           </form>
 
@@ -183,6 +195,8 @@ export function AuthScreen() {
               <p>Already have an account? <button onClick={() => setMode('login')} className="text-brand hover:underline">Sign in</button></p>
             ) : mode === 'reset' ? (
               <p>Remembered your password? <button onClick={() => setMode('login')} className="text-brand hover:underline">Sign in</button></p>
+            ) : mode === 'update' ? (
+              <p>Go back to <button onClick={() => setMode('login')} className="text-brand hover:underline">Sign in</button></p>
             ) : (
               <p>New to NMG? <button onClick={() => setMode('register')} className="text-brand hover:underline">Create account</button></p>
             )}

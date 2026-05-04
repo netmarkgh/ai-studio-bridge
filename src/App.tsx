@@ -14,7 +14,7 @@ import { SettingsView } from './views/SettingsView';
 import { AdminView } from './views/AdminView';
 
 export default function App() {
-  const { user, loading, profile } = useAuth();
+  const { user, loading, profile, isRecoveryMode } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [builderInitialClient, setBuilderInitialClient] = useState<string | null>(null);
 
@@ -29,6 +29,10 @@ export default function App() {
         </div>
       </div>
     );
+  }
+
+  if (isRecoveryMode) {
+    return <AuthScreen initialMode="update" />;
   }
 
   if (!user) {

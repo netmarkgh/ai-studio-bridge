@@ -6,6 +6,7 @@ interface AuthContextType {
   user: any | null;
   profile: Profile | null;
   loading: boolean;
+  isRecoveryMode: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -16,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
 
   async function refreshProfile() {
     const { data: { user: currentUser } } = await supabase.auth.getUser();
@@ -57,10 +59,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setIsRecoveryMode(true);
+      }
+      
       setUser(session?.user ?? null);
       if (session?.user) refreshProfile();
-      else setProfile(null);
+      else {
+        setProfile(null);
+        if (event === 'SIGNED_OUT') setIsRecoveryMode(false);
+      }
       setLoading(false);
     });
 
@@ -72,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, isRecoveryMode, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );
