@@ -21,6 +21,9 @@ export interface Profile {
   default_terms: string | null;
   acc_number: string | null;
   acc_name: string | null;
+  email: string | null;
+  permissions: string[] | null;
+  tags: string[] | null;
   created_at: string;
 }
 

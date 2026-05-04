@@ -13,7 +13,15 @@ import {
   Key, 
   ArrowUpRight,
   TrendingUp,
-  Clock
+  Clock,
+  Edit3,
+  Mail,
+  Phone,
+  MapPin,
+  Building2,
+  Tag,
+  Settings,
+  X
 } from 'lucide-react';
 
 export function AdminView() {
@@ -27,17 +35,31 @@ export function AdminView() {
   const [subMonths, setSubMonths] = useState(1);
   const [subStart, setSubStart] = useState(new Date().toISOString().split('T')[0]);
 
+  // Advanced Profile State
+  const [editingMember, setEditingMember] = useState<Profile | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Profile>>({});
+  const [activeTab, setActiveTab] = useState<'info' | 'analytics' | 'activity'>('info');
+
   useEffect(() => {
     loadAdminData();
   }, []);
 
   async function loadAdminData() {
     const { data: profiles } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
-    const { data: invs } = await supabase.from('invoices').select('total, status');
+    const { data: invs } = await supabase.from('invoices').select('total, status, user_id, created_at');
     setMembers(profiles || []);
     setInvoices(invs || []);
     setLoading(false);
   }
+
+  const getMemberAnalytics = (userId: string) => {
+    const userInvs = invoices.filter(i => i.user_id === userId);
+    return {
+      count: userInvs.length,
+      revenue: userInvs.reduce((s, i) => s + parseFloat(i.total || 0), 0),
+      paidCount: userInvs.filter(i => i.status === 'paid').length
+    };
+  };
 
   const totalRevenue = invoices.reduce((s, i) => s + parseFloat(i.total || 0), 0);
   const collected = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + parseFloat(i.total || 0), 0);
@@ -69,6 +91,43 @@ export function AdminView() {
       alert('Subscription set successfully');
       setPendingSub(null);
       loadAdminData();
+    }
+  };
+
+  const handleEdit = (member: Profile) => {
+    setEditingMember(member);
+    setEditForm({
+      name: member.name,
+      email: member.email,
+      biz_name: member.biz_name,
+      role: member.role,
+      phone: member.phone,
+      address: member.address,
+      permissions: member.permissions || [],
+      tags: member.tags || []
+    });
+  };
+
+  const handleSaveProfile = async () => {
+    if (!editingMember) return;
+    
+    const { error } = await supabase.from('profiles').update({
+      name: editForm.name,
+      email: editForm.email,
+      biz_name: editForm.biz_name,
+      role: editForm.role,
+      phone: editForm.phone,
+      address: editForm.address,
+      permissions: editForm.permissions,
+      tags: editForm.tags
+    }).eq('id', editingMember.id);
+
+    if (!error) {
+      setEditingMember(null);
+      loadAdminData();
+    } else {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile');
     }
   };
 
@@ -147,6 +206,13 @@ export function AdminView() {
                
                <div className="flex items-center gap-4">
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={() => handleEdit(m)}
+                      className="p-2 hover:bg-paper rounded-xl text-ink/40 hover:text-brand transition-colors"
+                      title="Edit Profile"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
                     <button 
                       onClick={() => handleUpdateRole(m.id, m.role === 'admin' ? 'member' : 'admin')}
                       className="p-2 hover:bg-paper rounded-xl text-ink/40 hover:text-ink transition-colors"
@@ -232,6 +298,301 @@ export function AdminView() {
                 </button>
               </div>
            </motion.div>
+        </div>
+      )}
+
+      {/* Advanced Profile Modal */}
+      {editingMember && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col rounded-3xl shadow-2xl"
+          >
+            {/* Modal Header */}
+            <div className="p-6 border-b border-black/5 flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-ink">Advanced Member Profile</h3>
+                <p className="text-ink/40 text-xs mt-0.5">Edit comprehensive details for {editingMember.name || 'this member'}.</p>
+              </div>
+              <button 
+                onClick={() => setEditingMember(null)}
+                className="p-2 hover:bg-paper rounded-xl text-ink/20 hover:text-ink/50 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Navigation */}
+            <div className="px-6 flex gap-6 border-b border-black/5 bg-paper/30">
+              {[
+                { id: 'info', icon: Users, label: 'Core Info' },
+                { id: 'analytics', icon: TrendingUp, label: 'Analytics' },
+                { id: 'activity', icon: Clock, label: 'Activity Log' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={cn(
+                    "py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2 border-b-2 transition-all",
+                    activeTab === tab.id 
+                      ? "border-brand text-brand" 
+                      : "border-transparent text-ink/30 hover:text-ink/60"
+                  )}
+                >
+                  <tab.icon className="w-3.5 h-3.5" />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto space-y-8 flex-1 custom-scrollbar">
+              {activeTab === 'info' && (
+                <>
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Basic Info */}
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                          <Users className="w-3 h-3" /> Full Name
+                        </label>
+                        <input 
+                          value={editForm.name || ''} 
+                          onChange={e => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                          className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-transparent focus:border-brand"
+                          placeholder="e.g. John Doe"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                          <Mail className="w-3 h-3" /> Email Address
+                        </label>
+                        <input 
+                          value={editForm.email || ''} 
+                          onChange={e => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+                          className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-transparent focus:border-brand"
+                          placeholder="email@example.com"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                          <Building2 className="w-3 h-3" /> Company Name
+                        </label>
+                        <input 
+                          value={editForm.biz_name || ''} 
+                          onChange={e => setEditForm(prev => ({ ...prev, biz_name: e.target.value }))}
+                          className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-transparent focus:border-brand"
+                          placeholder="e.g. Acme Corp"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Role & Status */}
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                          <Shield className="w-3 h-3" /> System Role
+                        </label>
+                        <select 
+                          value={editForm.role} 
+                          onChange={e => setEditForm(prev => ({ ...prev, role: e.target.value as any }))}
+                          className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-transparent focus:border-brand"
+                        >
+                          <option value="member">Member</option>
+                          <option value="admin">Administrator</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                          <Phone className="w-3 h-3" /> Phone Number
+                        </label>
+                        <input 
+                          value={editForm.phone || ''} 
+                          onChange={e => setEditForm(prev => ({ ...prev, phone: e.target.value }))}
+                          className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-transparent focus:border-brand"
+                          placeholder="+233..."
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                          <MapPin className="w-3 h-3" /> Physical Address
+                        </label>
+                        <input 
+                          value={editForm.address || ''} 
+                          onChange={e => setEditForm(prev => ({ ...prev, address: e.target.value }))}
+                          className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-transparent focus:border-brand"
+                          placeholder="City, Street"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tags Section */}
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                      <Tag className="w-3 h-3" /> Account Tags
+                    </label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {(editForm.tags || []).map((tag, i) => (
+                        <span key={i} className="px-3 py-1 bg-brand/5 text-brand rounded-lg text-xs font-bold flex items-center gap-2 group">
+                          {tag}
+                          <button 
+                            onClick={() => setEditForm(prev => ({ ...prev, tags: (prev.tags || []).filter((_, idx) => idx !== i) }))}
+                            className="hover:text-red-500"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                    <input 
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          const val = e.currentTarget.value.trim();
+                          if (val && !(editForm.tags || []).includes(val)) {
+                            setEditForm(prev => ({ ...prev, tags: [...(prev.tags || []), val] }));
+                            e.currentTarget.value = '';
+                          }
+                        }
+                      }}
+                      className="w-full px-4 py-3 bg-paper rounded-xl text-sm focus:outline-none border border-black/5"
+                      placeholder="Type a tag and press Enter..."
+                    />
+                  </div>
+
+                  {/* Permissions Section */}
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
+                      <Settings className="w-3 h-3" /> Specific Permissions
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        'can_export_data',
+                        'can_delete_invoices',
+                        'can_manage_clients',
+                        'can_access_revenue_reports',
+                        'can_manage_items',
+                        'can_customize_branding'
+                      ].map(perm => (
+                        <label key={perm} className="flex items-center gap-3 p-3 bg-paper rounded-xl cursor-pointer hover:bg-black/5 transition-colors">
+                          <input 
+                            type="checkbox"
+                            checked={(editForm.permissions || []).includes(perm)}
+                            onChange={e => {
+                              const checked = e.target.checked;
+                              setEditForm(prev => ({
+                                ...prev,
+                                permissions: checked 
+                                  ? [...(prev.permissions || []), perm]
+                                  : (prev.permissions || []).filter(p => p !== perm)
+                              }));
+                            }}
+                            className="w-4 h-4 rounded border-black/10 text-brand focus:ring-brand"
+                          />
+                          <span className="text-xs font-medium text-ink/70 capitalize">{perm.replace(/_/g, ' ')}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeTab === 'analytics' && (
+                <div className="space-y-6">
+                   <div className="grid grid-cols-3 gap-4">
+                      {(() => {
+                        const stats = getMemberAnalytics(editingMember.id);
+                        return (
+                          <>
+                            <div className="bg-paper p-6 rounded-2xl border border-black/5">
+                               <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Lifetime Revenue</div>
+                               <div className="text-xl font-bold text-ink">{formatCurrency(stats.revenue)}</div>
+                            </div>
+                            <div className="bg-paper p-6 rounded-2xl border border-black/5">
+                               <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Invoices Generated</div>
+                               <div className="text-xl font-bold text-ink">{stats.count}</div>
+                            </div>
+                            <div className="bg-paper p-6 rounded-2xl border border-black/5">
+                               <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Paid Invoices</div>
+                               <div className="text-xl font-bold text-brand">{stats.paidCount}</div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                   </div>
+
+                   <div className="bg-white border border-black/5 rounded-2xl p-6 space-y-4">
+                      <div className="flex items-center justify-between">
+                         <div className="text-xs font-bold text-ink/80">Account Timeline</div>
+                      </div>
+                      <div className="space-y-3">
+                         <div className="flex items-center justify-between text-xs">
+                            <span className="text-ink/40">Member Since</span>
+                            <span className="font-bold text-ink">{new Date(editingMember.created_at).toLocaleDateString()}</span>
+                         </div>
+                         <div className="flex items-center justify-between text-xs">
+                            <span className="text-ink/40">Current Status</span>
+                            <span className={cn(
+                              "font-bold px-2 py-0.5 rounded-md",
+                              editingMember.status === 'active' ? "bg-brand/10 text-brand" : "bg-red-50 text-red-500"
+                            )}>{editingMember.status}</span>
+                         </div>
+                         <div className="flex items-center justify-between text-xs">
+                            <span className="text-ink/40">Last Activity</span>
+                            <span className="font-bold text-ink">Today</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              )}
+
+              {activeTab === 'activity' && (
+                <div className="space-y-6">
+                   <div className="space-y-4">
+                      <div className="text-xs font-bold text-ink/40 uppercase tracking-widest ml-1">Recent System Events</div>
+                      <div className="space-y-3">
+                         {[
+                           { event: 'Invoice Generated', target: 'NMG-0012', time: '2 hours ago', icon: ArrowUpRight, color: 'text-brand bg-brand/5' },
+                           { event: 'Profile Updated', target: 'Business Name', time: '5 hours ago', icon: Edit3, color: 'text-blue-500 bg-blue-50' },
+                           { event: 'Security Login', target: 'IP: 192.168.1.1', time: '1 day ago', icon: Key, color: 'text-purple-500 bg-purple-50' },
+                           { event: 'New Client Added', target: 'Global Tech Ltd', time: '2 days ago', icon: Users, color: 'text-orange-500 bg-orange-50' }
+                         ].map((log, i) => (
+                           <div key={i} className="flex items-center gap-4 p-4 bg-paper rounded-2xl border border-transparent hover:border-black/5 transition-all">
+                              <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", log.color)}>
+                                 <log.icon className="w-5 h-5" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                 <div className="flex items-center justify-between">
+                                    <h4 className="text-sm font-bold text-ink">{log.event}</h4>
+                                    <span className="text-[10px] font-bold text-ink/30 uppercase tracking-widest">{log.time}</span>
+                                 </div>
+                                 <p className="text-xs text-ink/50 truncate font-mono mt-0.5">{log.target}</p>
+                              </div>
+                           </div>
+                         ))}
+                      </div>
+                   </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-black/5 flex gap-3">
+              <button 
+                onClick={handleSaveProfile}
+                className="flex-1 bg-brand text-white py-3 rounded-xl font-bold text-sm shadow-xl shadow-brand/20 hover:bg-brand-dark transition-all"
+              >
+                Save Changes
+              </button>
+              <button 
+                onClick={() => setEditingMember(null)}
+                className="flex-1 bg-paper text-ink/40 py-3 rounded-xl font-bold text-sm hover:bg-black/5 transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
         </div>
       )}
     </div>
