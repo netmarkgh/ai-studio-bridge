@@ -46,7 +46,7 @@ export function ClientsView({ onNewInvoiceFor }: { onNewInvoiceFor: (name: strin
   const filtered = clients.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-8 max-w-6xl mx-auto no-print">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink">Client Book</h1>

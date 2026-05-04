@@ -173,32 +173,34 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
 
   return (
     <div className="p-8 max-w-7xl mx-auto pb-24">
-      <div className="flex items-center justify-between mb-8 no-print">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-ink">New Invoice</h1>
-          <p className="text-ink/40 text-sm mt-1">Fill in the details to generate a professional invoice.</p>
-        </div>
-        <div className="flex gap-2">
-          <button 
-            onClick={handleShareWA}
-            className="bg-[#25D366] text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition-opacity"
-          >
-            <Smartphone className="w-4 h-4" /> WhatsApp
-          </button>
-          <button 
-            onClick={() => window.print()}
-            className="bg-white border border-black/5 text-ink px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-paper transition-colors"
-          >
-            <FileText className="w-4 h-4" /> Print / Save PDF
-          </button>
-          <button 
-            onClick={handleSave}
-            disabled={loading}
-            className="bg-brand text-white px-6 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-brand-dark transition-colors disabled:opacity-50"
-          >
-            {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
-            Save Invoice
-          </button>
+      <div className="no-print">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-ink">New Invoice</h1>
+            <p className="text-ink/40 text-sm mt-1">Fill in the details to generate a professional invoice.</p>
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleShareWA}
+              className="bg-[#25D366] text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition-opacity"
+            >
+              <Smartphone className="w-4 h-4" /> WhatsApp
+            </button>
+            <button 
+              onClick={() => window.print()}
+              className="bg-white border border-black/5 text-ink px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-paper transition-colors"
+            >
+              <FileText className="w-4 h-4" /> Print / Save PDF
+            </button>
+            <button 
+              onClick={handleSave}
+              disabled={loading}
+              className="bg-brand text-white px-6 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-brand-dark transition-colors disabled:opacity-50"
+            >
+              {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
+              Save Invoice
+            </button>
+          </div>
         </div>
       </div>
 
@@ -414,7 +416,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
             </div>
           </div>
           
-          <div className="bg-white border border-black/5 aspect-[1/1.414] shadow-2xl rounded-2xl p-10 font-sans overflow-hidden print-shadow-none print:w-full print:border-none">
+          <div id="printable-invoice" className="bg-white border border-black/5 aspect-[1/1.414] shadow-2xl rounded-2xl p-10 font-sans overflow-hidden print-shadow-none print:w-full print:border-none print:p-0">
              {/* Header */}
              <div className="flex justify-between items-start border-b-[2.5px] border-brand pb-6 mb-6">
                <div className="flex gap-4">

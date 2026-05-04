@@ -22,18 +22,69 @@
   .no-print {
     display: none !important;
   }
-  .print-only {
-    display: block !important;
+  
+  /* Hide major layout components */
+  aside, 
+  .sidebar-container,
+  nav,
+  .no-print-bg {
+    display: none !important;
   }
-  .print-shadow-none {
-    box-shadow: none !important;
-    border: none !important;
-  }
+
   body {
     background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
+
+  /* Modal container styling for print */
+  .fixed.inset-0.z-50 {
+    position: static !important;
+    display: block !important;
+    background: white !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    z-index: auto !important;
+    overflow: visible !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Remove modal specific shadow and rounding */
+  .fixed.inset-0.z-50 > div {
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  /* Hide everything inside main except our modal is difficult, 
+     so we rely on no-print classes on the view contents */
+  
+  .history-search-bar,
+  .history-table-container,
+  .dashboard-stats,
+  .dashboard-charts {
+    display: none !important;
+  }
+
+  /* Show ONLY the printable invoice */
+  #printable-invoice {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    visibility: visible !important;
+  }
+
   @page {
-    margin: 0;
+    margin: 1.5cm;
   }
 }
 

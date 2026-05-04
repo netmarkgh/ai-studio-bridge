@@ -67,128 +67,130 @@ export function HistoryView() {
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-ink">Invoice History</h1>
-          <p className="text-ink/40 text-sm mt-1">{filteredInvoices.length} invoices found</p>
-        </div>
-        <div className="flex gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/30" />
-            <input 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by client or #"
-              className="pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand w-64"
-            />
+      <div className="no-print">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-ink">Invoice History</h1>
+            <p className="text-ink/40 text-sm mt-1">{filteredInvoices.length} invoices found</p>
           </div>
-          <div className="relative group">
-             <button className="px-4 py-2 bg-white border border-black/5 rounded-xl text-sm font-semibold flex items-center gap-2">
-               <Filter className="w-4 h-4 text-ink/30" />
-               <span className="capitalize">{filter}</span>
-               <ChevronDown className="w-3 h-3 text-ink/30" />
-             </button>
-             <div className="absolute right-0 top-full mt-2 w-40 bg-white border border-black/5 rounded-xl shadow-xl z-20 overflow-hidden opacity-0 invisible group-focus-within:visible group-focus-within:opacity-100 transition-all">
-               {['all', 'paid', 'unpaid', 'overdue', 'draft'].map(s => (
-                 <button 
-                  key={s} 
-                  onClick={() => setFilter(s)}
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-paper capitalize"
-                 >
-                   {s}
-                 </button>
-               ))}
-             </div>
+          <div className="flex gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/30" />
+              <input 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by client or #"
+                className="pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand w-64"
+              />
+            </div>
+            <div className="relative group">
+               <button className="px-4 py-2 bg-white border border-black/5 rounded-xl text-sm font-semibold flex items-center gap-2">
+                 <Filter className="w-4 h-4 text-ink/30" />
+                 <span className="capitalize">{filter}</span>
+                 <ChevronDown className="w-3 h-3 text-ink/30" />
+               </button>
+               <div className="absolute right-0 top-full mt-2 w-40 bg-white border border-black/5 rounded-xl shadow-xl z-20 overflow-hidden opacity-0 invisible group-focus-within:visible group-focus-within:opacity-100 transition-all">
+                 {['all', 'paid', 'unpaid', 'overdue', 'draft'].map(s => (
+                   <button 
+                    key={s} 
+                    onClick={() => setFilter(s)}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-paper capitalize"
+                   >
+                     {s}
+                   </button>
+                 ))}
+               </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-paper border-b border-black/5">
-              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Invoice</th>
-              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Client</th>
-              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Date / Due</th>
-              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-right">Amount</th>
-              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-center">Status</th>
-              <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-black/5">
-            {loading ? (
-              <tr><td colSpan={6} className="px-6 py-20 text-center text-ink/20 animate-pulse font-bold">Loading records...</td></tr>
-            ) : filteredInvoices.length === 0 ? (
-              <tr><td colSpan={6} className="px-6 py-20 text-center text-ink/30 italic">No records to display.</td></tr>
-            ) : (
-              filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-paper/40 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="font-mono text-[10px] font-bold text-brand">{inv.inv_number}</div>
-                    {isAdmin && <div className="text-[10px] text-ink/30 mt-0.5">{inv.biz_name}</div>}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="font-semibold text-sm">{inv.client_name}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-xs text-ink/60">{inv.inv_date}</div>
-                    <div className="text-[10px] text-ink/30 mt-0.5 font-bold">Due: {inv.due_date}</div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="font-bold font-mono text-sm">{formatCurrency(inv.total, inv.currency)}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex justify-center">
-                      <span className={cn(
-                        "text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md",
-                        inv.status === 'paid' ? 'bg-brand/10 text-brand' : 
-                        inv.status === 'overdue' ? 'bg-red-500/10 text-red-500' : 
-                        'bg-amber-500/10 text-amber-500'
-                      )}>
-                        {inv.status}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button 
-                         onClick={() => setSelectedInvoice(inv)}
-                         title="View Invoice"
-                         className="p-1.5 text-brand hover:bg-paper rounded-lg transition-colors"
-                      >
-                         <Eye className="w-4 h-4" />
-                      </button>
-                      <button 
-                         onClick={() => handleShareWA(inv)}
-                         title="Share WhatsApp"
-                         className="p-1.5 text-[#25D366] hover:bg-paper rounded-lg transition-colors"
-                      >
-                         <Smartphone className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => setSelectedInvoice(inv)}
-                        title="Print PDF"
-                        className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors"
-                      >
-                         <Printer className="w-4 h-4" />
-                      </button>
-                      <div className="relative group/menu">
-                        <button className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors">
-                           <MoreHorizontal className="w-4 h-4" />
+        <div className="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-paper border-b border-black/5">
+                <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Invoice</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Client</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest">Date / Due</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-right">Amount</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-center">Status</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-ink/30 uppercase tracking-widest text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/5">
+              {loading ? (
+                <tr><td colSpan={6} className="px-6 py-20 text-center text-ink/20 animate-pulse font-bold">Loading records...</td></tr>
+              ) : filteredInvoices.length === 0 ? (
+                <tr><td colSpan={6} className="px-6 py-20 text-center text-ink/30 italic">No records to display.</td></tr>
+              ) : (
+                filteredInvoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-paper/40 transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="font-mono text-[10px] font-bold text-brand">{inv.inv_number}</div>
+                      {isAdmin && <div className="text-[10px] text-ink/30 mt-0.5">{inv.biz_name}</div>}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-semibold text-sm">{inv.client_name}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-xs text-ink/60">{inv.inv_date}</div>
+                      <div className="text-[10px] text-ink/30 mt-0.5 font-bold">Due: {inv.due_date}</div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="font-bold font-mono text-sm">{formatCurrency(inv.total, inv.currency)}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center">
+                        <span className={cn(
+                          "text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md",
+                          inv.status === 'paid' ? 'bg-brand/10 text-brand' : 
+                          inv.status === 'overdue' ? 'bg-red-500/10 text-red-500' : 
+                          'bg-amber-500/10 text-amber-500'
+                        )}>
+                          {inv.status}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                           onClick={() => setSelectedInvoice(inv)}
+                           title="View Invoice"
+                           className="p-1.5 text-brand hover:bg-paper rounded-lg transition-colors"
+                        >
+                           <Eye className="w-4 h-4" />
                         </button>
-                        <div className="absolute right-0 bottom-full mb-2 w-32 bg-white border border-black/5 rounded-xl shadow-xl z-30 overflow-hidden opacity-0 invisible group-hover/menu:visible group-hover/menu:opacity-100 transition-all border-black/5">
-                           <button onClick={() => updateStatus(inv.id, 'paid')} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-paper">Mark Paid</button>
-                           <button onClick={() => updateStatus(inv.id, 'unpaid')} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 hover:bg-paper">Mark Unpaid</button>
-                           <button onClick={() => deleteInvoice(inv.id)} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-paper border-t border-black/5">Delete</button>
+                        <button 
+                           onClick={() => handleShareWA(inv)}
+                           title="Share WhatsApp"
+                           className="p-1.5 text-[#25D366] hover:bg-paper rounded-lg transition-colors"
+                        >
+                           <Smartphone className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => setSelectedInvoice(inv)}
+                          title="Print PDF"
+                          className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors"
+                        >
+                           <Printer className="w-4 h-4" />
+                        </button>
+                        <div className="relative group/menu">
+                          <button className="p-1.5 text-ink/40 hover:text-ink hover:bg-paper rounded-lg transition-colors">
+                             <MoreHorizontal className="w-4 h-4" />
+                          </button>
+                          <div className="absolute right-0 bottom-full mb-2 w-32 bg-white border border-black/5 rounded-xl shadow-xl z-30 overflow-hidden opacity-0 invisible group-hover/menu:visible group-hover/menu:opacity-100 transition-all border-black/5">
+                             <button onClick={() => updateStatus(inv.id, 'paid')} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-paper">Mark Paid</button>
+                             <button onClick={() => updateStatus(inv.id, 'unpaid')} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 hover:bg-paper">Mark Unpaid</button>
+                             <button onClick={() => deleteInvoice(inv.id)} className="w-full text-left px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-paper border-t border-black/5">Delete</button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
       <InvoicePreviewModal 
         invoice={selectedInvoice} 

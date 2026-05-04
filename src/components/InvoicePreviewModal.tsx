@@ -39,15 +39,15 @@ export function InvoicePreviewModal({ invoice, onClose }: InvoicePreviewModalPro
   return (
     <AnimatePresence>
       {invoice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm print:p-0 print:bg-white print:static print:block">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="bg-white w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl flex flex-col"
+            className="bg-white w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl shadow-2xl flex flex-col print:shadow-none print:max-h-none print:w-full print:rounded-none"
           >
             {/* Header / Actions */}
-            <div className="p-4 border-b border-black/5 flex items-center justify-between bg-paper/50">
+            <div className="p-4 border-b border-black/5 flex items-center justify-between bg-paper/50 no-print">
               <div className="flex gap-2">
                 <button 
                   onClick={() => window.print()}
@@ -71,8 +71,8 @@ export function InvoicePreviewModal({ invoice, onClose }: InvoicePreviewModalPro
             </div>
 
             {/* Scrollable Preview Area */}
-            <div className="flex-1 overflow-y-auto p-12 bg-paper/30">
-              <div id="printable-invoice" className="bg-white aspect-[1/1.414] w-[700px] mx-auto shadow-xl p-12 print:shadow-none print:w-full print:p-0">
+            <div className="flex-1 overflow-y-auto p-12 bg-paper/30 print:p-0 print:bg-transparent print:overflow-visible">
+              <div id="printable-invoice" className="bg-white aspect-[1/1.414] w-[700px] mx-auto shadow-xl p-12 print:shadow-none print:w-full print:p-0 print:mx-0">
                 {/* Header */}
                 <div className="flex justify-between items-start border-b-[2.5px] border-brand pb-8 mb-8">
                   <div className="flex gap-6">
