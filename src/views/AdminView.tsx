@@ -127,7 +127,7 @@ export function AdminView() {
       loadAdminData();
     } else {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile');
+      alert(`Failed to update profile: ${error.message} (${error.hint || 'No hint available'})`);
     }
   };
 
