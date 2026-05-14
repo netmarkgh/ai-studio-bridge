@@ -47,8 +47,10 @@ export function AuthScreen({ initialMode = 'login' }: { initialMode?: 'login' | 
         });
         if (signInError) throw signInError;
       } else if (mode === 'reset') {
+        const redirectTo = window.location.origin + window.location.pathname;
+        console.log('Supabase Recovery Redirect URL:', redirectTo);
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + window.location.pathname,
+          redirectTo: redirectTo,
         });
         if (resetError) throw resetError;
         setSuccess('Password reset link sent! Check your email.');
@@ -57,8 +59,11 @@ export function AuthScreen({ initialMode = 'login' }: { initialMode?: 'login' | 
           password: password,
         });
         if (updateError) throw updateError;
-        setSuccess('Password updated successfully! You can now use your new password.');
-        setTimeout(() => window.location.reload(), 2000);
+        setSuccess('Password updated successfully! Redirecting...');
+        setTimeout(() => {
+          // Clear signals and reload to fresh state
+          window.location.href = window.location.origin + window.location.pathname;
+        }, 2000);
       }
     } catch (err: any) {
       setError(err.message);
