@@ -179,6 +179,7 @@ export function SettingsView() {
                     <option>Vodafone Cash</option>
                     <option>Bank Transfer</option>
                     <option>Paystack Link</option>
+                    <option>Cash</option>
                   </select>
               </div>
 
