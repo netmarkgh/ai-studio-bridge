@@ -48,7 +48,7 @@ export function AuthScreen({ initialMode = 'login' }: { initialMode?: 'login' | 
         if (signInError) throw signInError;
       } else if (mode === 'reset') {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin,
+          redirectTo: window.location.origin + window.location.pathname,
         });
         if (resetError) throw resetError;
         setSuccess('Password reset link sent! Check your email.');
