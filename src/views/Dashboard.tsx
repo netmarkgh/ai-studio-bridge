@@ -42,9 +42,9 @@ export function Dashboard({ onNewInvoice, onViewHistory }: { onNewInvoice: () =>
   const canShowRevenue = isAdmin || profile?.permissions?.includes('can_access_revenue_reports');
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto">
       <div className="no-print">
-        <div className="flex items-start justify-between mb-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-ink">
               {greeting}, {profile?.name?.split(' ')[0]}
@@ -55,7 +55,7 @@ export function Dashboard({ onNewInvoice, onViewHistory }: { onNewInvoice: () =>
           </div>
           <button 
             onClick={onNewInvoice}
-            className="bg-brand text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all flex items-center gap-2 text-sm"
+            className="w-full sm:w-auto justify-center bg-brand text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all flex items-center gap-2 text-sm"
           >
             <span>+</span> New Invoice
           </button>

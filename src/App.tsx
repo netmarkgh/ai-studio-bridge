@@ -17,6 +17,7 @@ export default function App() {
   const { user, loading, profile, isRecoveryMode } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [builderInitialClient, setBuilderInitialClient] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (loading) {
     return (
@@ -98,9 +99,29 @@ export default function App() {
   };
 
   return (
-    <div className="flex bg-paper min-h-screen font-sans">
-      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex-1 overflow-y-auto h-screen">
+    <div className="flex bg-paper min-h-screen font-sans relative overflow-hidden">
+      <Sidebar 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+      
+      <main className="flex-1 overflow-y-auto h-screen relative">
+        {/* Mobile Header */}
+        <div className="lg:hidden h-14 bg-white border-b border-black/5 flex items-center px-4 sticky top-0 z-30 no-print">
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 -ml-2 text-ink/60 hover:text-ink transition-colors"
+          >
+            <div className="w-5 h-0.5 bg-current rounded-full mb-1" />
+            <div className="w-5 h-0.5 bg-current rounded-full mb-1" />
+            <div className="w-5 h-0.5 bg-current rounded-full" />
+          </button>
+          <div className="flex-1 text-center font-bold text-brand tracking-tighter">NMG</div>
+          <div className="w-9" /> {/* Spacer */}
+        </div>
+
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}

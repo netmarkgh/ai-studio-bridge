@@ -18,9 +18,11 @@ export type TabId = 'dashboard' | 'new-invoice' | 'history' | 'clients' | 'items
 interface SidebarProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
+export function Sidebar({ activeTab, onTabChange, isOpen, onClose }: SidebarProps) {
   const { profile, signOut, user } = useAuth();
   
   const menuItems = [
@@ -36,13 +38,30 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
     return profile?.permissions?.includes(item.permission);
   });
 
+  const handleTabClick = (tabId: TabId) => {
+    onTabChange(tabId);
+    onClose();
+  };
+
   if (profile?.role === 'admin') {
     menuItems.push({ id: 'admin', label: 'Admin Panel', icon: ShieldCheck });
   }
 
   return (
-    <aside className="w-64 bg-white border-r border-black/5 flex flex-col h-screen overflow-hidden no-print">
-      {/* Brand */}
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden no-print"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 lg:static w-72 bg-white border-r border-black/5 flex flex-col h-screen overflow-hidden no-print transition-transform duration-300 transform",
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
+        {/* Brand */}
       <div className="p-6 border-b border-black/5 flex items-center gap-3">
         <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center text-white font-bold text-lg overflow-hidden shrink-0 shadow-lg shadow-brand/20">
           {profile?.logo_url ? (
@@ -64,7 +83,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
         {menuItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => onTabChange(item.id as TabId)}
+            onClick={() => handleTabClick(item.id as TabId)}
             className={cn(
               "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group",
               activeTab === item.id 
@@ -99,5 +118,6 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
         </button>
       </div>
     </aside>
+    </>
   );
 }
