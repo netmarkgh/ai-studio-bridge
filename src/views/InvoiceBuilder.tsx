@@ -23,6 +23,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
   const { profile, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
+  const [nextInvNumber, setNextInvNumber] = useState('NMG-2000');
 
   // Form State
   const [form, setForm] = useState({
@@ -71,6 +72,17 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
       }
     }
     loadClients();
+
+    async function getNextInvNumber() {
+      const { count } = await supabase
+        .from('invoices')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+      
+      const num = 2000 + (count || 0);
+      setNextInvNumber(`NMG-${num}`);
+    }
+    getNextInvNumber();
   }, [user.id, initialClientName]);
 
   const updateItem = (id: number, field: keyof InvoiceItem, value: string | number) => {
@@ -100,12 +112,9 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
     setLoading(true);
 
     try {
-      const { count } = await supabase.from('invoices').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
-      const invNumber = `NMG-${String((count || 0)).padStart(4, '0')}`;
-
       const { data: inv, error: invError } = await supabase.from('invoices').insert({
         user_id: user.id,
-        inv_number: invNumber,
+        inv_number: nextInvNumber,
         client_name: form.clientName,
         client_phone: form.clientPhone,
         client_email: form.clientEmail,
@@ -499,7 +508,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                </div>
                <div className="text-right">
                  <div className="bg-brand-light text-brand px-3 py-1 rounded-md text-[10px] font-bold tracking-widest inline-block">INVOICE</div>
-                 <div className="font-mono text-[11px] text-ink/40 mt-1.5 uppercase tracking-tighter">PREVIEW</div>
+                 <div className="font-mono text-[11px] text-ink/40 mt-1.5 uppercase tracking-tighter">{nextInvNumber}</div>
                  <div className="text-[10px] text-ink/40 mt-0.5">{form.invDate}</div>
                </div>
              </div>
