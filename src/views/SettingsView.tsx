@@ -76,22 +76,22 @@ export function SettingsView() {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto pb-24">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto pb-24">
       <div className="mb-10">
         <h1 className="text-2xl font-bold tracking-tight text-ink">Account Settings</h1>
         <p className="text-ink/40 text-sm mt-1">Manage your business profile and invoice defaults.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
         {/* Left Column: Profile */}
         <div className="space-y-8">
-          <div className="bg-white border border-black/5 p-8 rounded-2xl shadow-sm space-y-6">
+          <div className="bg-white border border-black/5 p-6 md:p-8 rounded-2xl shadow-sm space-y-6">
             <div className="flex items-center gap-2 text-ink/80 mb-2">
               <LayoutGrid className="w-4 h-4 text-brand" />
               <div className="text-[10px] uppercase font-bold tracking-widest">Business profile</div>
             </div>
             
-            <div className="flex items-center gap-6 pb-6 border-b border-black/5">
+            <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-black/5">
               <div className="relative group cursor-pointer">
                 <div className="w-20 h-20 bg-paper rounded-2xl flex items-center justify-center text-ink/20 overflow-hidden border border-black/5">
                   {profile?.logo_url ? <img src={profile.logo_url} className="w-full h-full object-cover" /> : <ImageIcon className="w-8 h-8 opacity-40" />}
@@ -101,13 +101,13 @@ export function SettingsView() {
                 </div>
                 <input type="file" onChange={handleUploadLogo} className="absolute inset-0 opacity-0 cursor-pointer" />
               </div>
-              <div>
+              <div className="text-center sm:text-left">
                 <div className="text-sm font-bold text-ink">Business Logo</div>
                 <div className="text-[10px] text-ink/40 mt-1 uppercase tracking-tight">PNG or JPG · Recommended size 200x200</div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Business Name</label>
                 <input value={bizName} onChange={e => setBizName(e.target.value)} className="w-full px-4 py-2.5 bg-paper rounded-xl text-sm outline-none border border-transparent focus:border-brand" />
@@ -117,7 +117,7 @@ export function SettingsView() {
                 <input value={name} onChange={e => setName(e.target.value)} className="w-full px-4 py-2.5 bg-paper rounded-xl text-sm outline-none border border-transparent focus:border-brand" />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Phone</label>
                 <input value={phone} onChange={e => setPhone(e.target.value)} className="w-full px-4 py-2.5 bg-paper rounded-xl text-sm outline-none border border-transparent focus:border-brand" />
@@ -137,7 +137,7 @@ export function SettingsView() {
             </button>
           </div>
 
-          <div className="bg-white border border-black/5 p-8 rounded-2xl shadow-sm space-y-6">
+          <div className="bg-white border border-black/5 p-6 md:p-8 rounded-2xl shadow-sm space-y-6">
             <div className="flex items-center gap-2 text-ink/80">
               <Lock className="w-4 h-4 text-brand" />
               <div className="text-[10px] uppercase font-bold tracking-widest">Change password</div>
@@ -166,7 +166,7 @@ export function SettingsView() {
 
         {/* Right Column: Payment Defaults */}
         <div>
-           <div className="bg-white border border-black/5 p-8 rounded-2xl shadow-sm space-y-6 sticky top-8">
+           <div className="bg-white border border-black/5 p-6 md:p-8 rounded-2xl shadow-sm space-y-6 lg:sticky lg:top-8">
               <div className="flex items-center gap-2 text-ink/80 mb-2">
                 <CreditCard className="w-4 h-4 text-brand" />
                 <div className="text-[10px] uppercase font-bold tracking-widest">Payment defaults</div>
@@ -182,7 +182,7 @@ export function SettingsView() {
                   </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Account Number</label>
                   <input value={accNumber} onChange={e => setAccNumber(e.target.value)} className="w-full px-4 py-2.5 bg-paper rounded-xl text-sm outline-none border border-transparent focus:border-brand" />

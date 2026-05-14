@@ -136,14 +136,14 @@ export function AdminView() {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto pb-24">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto pb-24">
       <div className="mb-10">
         <h1 className="text-2xl font-bold tracking-tight text-ink">NMG Admin Panel</h1>
         <p className="text-ink/40 text-sm mt-1">Community management and infrastructure health.</p>
       </div>
 
       {/* Admin Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
            <div className="text-[10px] font-bold text-ink/40 uppercase tracking-widest mb-1">Members</div>
            <div className="text-2xl font-bold text-ink">{members.length}</div>
@@ -154,24 +154,24 @@ export function AdminView() {
         </div>
         <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
            <div className="text-[10px] font-bold text-ink/40 uppercase tracking-widest mb-1">Community Revenue</div>
-           <div className="text-2xl font-bold font-mono text-ink">{formatCurrency(totalRevenue)}</div>
+           <div className="text-2xl font-bold font-mono text-ink leading-tight">{formatCurrency(totalRevenue)}</div>
         </div>
         <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
            <div className="text-[10px] font-bold text-ink/40 uppercase tracking-widest mb-1">Collected</div>
-           <div className="text-2xl font-bold font-mono text-brand">{formatCurrency(collected)}</div>
+           <div className="text-2xl font-bold font-mono text-brand leading-tight">{formatCurrency(collected)}</div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 px-1">
           <h3 className="font-semibold text-ink/80 text-sm">Community Members</h3>
         </div>
 
         <div className="grid grid-cols-1 gap-3">
           {members.map((m) => (
-            <div key={m.id} className="bg-white border border-black/5 p-6 rounded-2xl flex items-center justify-between shadow-sm group hover:border-brand/40 transition-all">
-               <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 bg-paper rounded-2xl flex items-center justify-center text-brand font-bold text-lg group-hover:bg-brand/10 transition-all">
+            <div key={m.id} className="bg-white border border-black/5 p-4 md:p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between shadow-sm group hover:border-brand/40 transition-all gap-6">
+               <div className="flex items-center gap-4 md:gap-6">
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-paper shrink-0 rounded-2xl flex items-center justify-center text-brand font-bold text-lg group-hover:bg-brand/10 transition-all">
                     {getInitials(m.name || '?')}
                   </div>
                   <div>
@@ -185,9 +185,9 @@ export function AdminView() {
                        </span>
                     </div>
                     <div className="text-[10px] text-ink/50 mt-1 uppercase tracking-tight font-medium">
-                      {m.biz_name} · {m.biz_type || 'General'}
+                      {m.biz_name} {m.biz_name && '·'} {m.biz_type || 'General'}
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center flex-wrap gap-2 mt-2">
                       <span className={cn(
                         "text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md",
                         m.status === 'active' ? "bg-brand/10 text-brand" : "bg-red-500/10 text-red-500"
@@ -197,46 +197,46 @@ export function AdminView() {
                       {m.sub_expires_at && (
                         <div className="flex items-center gap-1 text-[9px] text-ink/40 font-bold uppercase">
                           <Clock className="w-2.5 h-2.5" /> 
-                          Expires: {m.sub_expires_at.split('T')[0]}
+                          Exp: {m.sub_expires_at.split('T')[0]}
                         </div>
                       )}
                     </div>
                   </div>
                </div>
                
-               <div className="flex items-center gap-4">
-                  <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+               <div className="flex items-center justify-between md:justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity pt-4 md:pt-0 border-t md:border-0 border-black/5">
+                  <div className="flex gap-2">
                     <button 
                       onClick={() => handleEdit(m)}
-                      className="p-2 hover:bg-paper rounded-xl text-ink/40 hover:text-brand transition-colors"
+                      className="p-2.5 bg-paper md:bg-transparent md:hover:bg-paper rounded-xl text-ink/40 hover:text-brand transition-colors"
                       title="Edit Profile"
                     >
-                      <Edit3 className="w-4 h-4" />
+                      <Edit3 className="w-5 h-5 md:w-4 md:h-4" />
                     </button>
                     <button 
                       onClick={() => handleUpdateRole(m.id, m.role === 'admin' ? 'member' : 'admin')}
-                      className="p-2 hover:bg-paper rounded-xl text-ink/40 hover:text-ink transition-colors"
+                      className="p-2.5 bg-paper md:bg-transparent md:hover:bg-paper rounded-xl text-ink/40 hover:text-ink transition-colors"
                       title="Toggle Admin"
                     >
-                      <Shield className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => setPendingSub(m)}
-                      className="flex items-center gap-2 bg-brand/10 text-brand px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-brand hover:text-white transition-all shadow-sm"
-                    >
-                      <Calendar className="w-3.5 h-3.5" /> Subscription
+                      <Shield className="w-5 h-5 md:w-4 md:h-4" />
                     </button>
                     <button 
                       onClick={() => handleToggleStatus(m.id, m.status)}
                       className={cn(
-                        "p-2 rounded-xl transition-colors",
+                        "p-2.5 bg-paper md:bg-transparent rounded-xl transition-colors",
                         m.status === 'active' ? "hover:bg-red-50 text-red-400 hover:text-red-500" : "hover:bg-brand/10 text-brand/40 hover:text-brand"
                       )}
                       title={m.status === 'active' ? 'Deactivate' : 'Activate'}
                     >
-                      {m.status === 'active' ? <XCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                      {m.status === 'active' ? <XCircle className="w-5 h-5 md:w-4 md:h-4" /> : <CheckCircle className="w-5 h-5 md:w-4 md:h-4" />}
                     </button>
                   </div>
+                  <button 
+                    onClick={() => setPendingSub(m)}
+                    className="flex items-center gap-2 bg-brand text-white md:bg-brand/10 md:text-brand px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider md:hover:bg-brand md:hover:text-white transition-all shadow-sm"
+                  >
+                    <Calendar className="w-3.5 h-3.5" /> Subscription
+                  </button>
                </div>
             </div>
           ))}
@@ -245,11 +245,11 @@ export function AdminView() {
 
       {/* Subscription Modal */}
       {pendingSub && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
            <motion.div 
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl space-y-6"
+            className="bg-white w-full max-w-md p-6 md:p-8 rounded-3xl shadow-2xl space-y-6"
            >
               <div>
                 <h3 className="text-xl font-bold text-ink">Set Subscription</h3>
@@ -289,11 +289,11 @@ export function AdminView() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-2">
-                <button onClick={handleSetSubscription} className="flex-1 bg-brand text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all">
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <button onClick={handleSetSubscription} className="flex-1 bg-brand text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all order-1 sm:order-2">
                   Confirm Access
                 </button>
-                <button onClick={() => setPendingSub(null)} className="flex-1 bg-paper text-ink/40 py-3 rounded-xl font-bold text-sm hover:bg-black/5 transition-all">
+                <button onClick={() => setPendingSub(null)} className="flex-1 bg-paper text-ink/40 py-3.5 rounded-xl font-bold text-sm hover:bg-black/5 transition-all order-2 sm:order-1">
                   Cancel
                 </button>
               </div>
@@ -303,17 +303,17 @@ export function AdminView() {
 
       {/* Advanced Profile Modal */}
       {editingMember && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
           <motion.div 
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="bg-white w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col rounded-3xl shadow-2xl"
           >
             {/* Modal Header */}
-            <div className="p-6 border-b border-black/5 flex items-center justify-between">
+            <div className="p-5 md:p-6 border-b border-black/5 flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-bold text-ink">Advanced Member Profile</h3>
-                <p className="text-ink/40 text-xs mt-0.5">Edit comprehensive details for {editingMember.name || 'this member'}.</p>
+                <h3 className="text-lg md:text-xl font-bold text-ink">Advanced Member Profile</h3>
+                <p className="text-ink/40 text-[10px] md:text-xs mt-0.5">Edit comprehensive details for {editingMember.name || 'this member'}.</p>
               </div>
               <button 
                 onClick={() => setEditingMember(null)}
@@ -324,7 +324,7 @@ export function AdminView() {
             </div>
 
             {/* Modal Navigation */}
-            <div className="px-6 flex gap-6 border-b border-black/5 bg-paper/30">
+            <div className="px-5 md:px-6 flex gap-4 md:gap-6 border-b border-black/5 bg-paper/30 overflow-x-auto no-scrollbar">
               {[
                 { id: 'info', icon: Users, label: 'Core Info' },
                 { id: 'analytics', icon: TrendingUp, label: 'Analytics' },
@@ -334,7 +334,7 @@ export function AdminView() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={cn(
-                    "py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2 border-b-2 transition-all",
+                    "py-4 text-[10px] md:text-xs font-bold uppercase tracking-widest flex items-center gap-2 border-b-2 transition-all shrink-0",
                     activeTab === tab.id 
                       ? "border-brand text-brand" 
                       : "border-transparent text-ink/30 hover:text-ink/60"
@@ -347,10 +347,10 @@ export function AdminView() {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto space-y-8 flex-1 custom-scrollbar">
+            <div className="p-5 md:p-6 overflow-y-auto space-y-8 flex-1 custom-scrollbar">
               {activeTab === 'info' && (
                 <>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Basic Info */}
                     <div className="space-y-4">
                       <div className="space-y-1">
@@ -466,7 +466,7 @@ export function AdminView() {
                     <label className="text-[10px] font-bold text-ink/40 uppercase ml-1 flex items-center gap-1.5">
                       <Settings className="w-3 h-3" /> Specific Permissions
                     </label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
                         'can_export_data',
                         'can_delete_invoices',
@@ -486,7 +486,7 @@ export function AdminView() {
                                 permissions: checked 
                                   ? [...(prev.permissions || []), perm]
                                   : (prev.permissions || []).filter(p => p !== perm)
-                              }));
+                                }));
                             }}
                             className="w-4 h-4 rounded border-black/10 text-brand focus:ring-brand"
                           />
@@ -500,22 +500,22 @@ export function AdminView() {
 
               {activeTab === 'analytics' && (
                 <div className="space-y-6">
-                   <div className="grid grid-cols-3 gap-4">
+                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {(() => {
                         const stats = getMemberAnalytics(editingMember.id);
                         return (
                           <>
                             <div className="bg-paper p-6 rounded-2xl border border-black/5">
                                <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Lifetime Revenue</div>
-                               <div className="text-xl font-bold text-ink">{formatCurrency(stats.revenue)}</div>
+                               <div className="text-xl font-bold text-ink leading-tight">{formatCurrency(stats.revenue)}</div>
                             </div>
                             <div className="bg-paper p-6 rounded-2xl border border-black/5">
-                               <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Invoices Generated</div>
-                               <div className="text-xl font-bold text-ink">{stats.count}</div>
+                               <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Invoices Issued</div>
+                               <div className="text-xl font-bold text-ink leading-tight">{stats.count}</div>
                             </div>
                             <div className="bg-paper p-6 rounded-2xl border border-black/5">
                                <div className="text-[10px] font-bold text-ink/30 uppercase tracking-widest mb-1">Paid Invoices</div>
-                               <div className="text-xl font-bold text-brand">{stats.paidCount}</div>
+                               <div className="text-xl font-bold text-brand leading-tight">{stats.paidCount}</div>
                             </div>
                           </>
                         );
@@ -563,11 +563,11 @@ export function AdminView() {
                                  <log.icon className="w-5 h-5" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                 <div className="flex items-center justify-between">
+                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                                     <h4 className="text-sm font-bold text-ink">{log.event}</h4>
                                     <span className="text-[10px] font-bold text-ink/30 uppercase tracking-widest">{log.time}</span>
                                  </div>
-                                 <p className="text-xs text-ink/50 truncate font-mono mt-0.5">{log.target}</p>
+                                 <p className="text-xs text-ink/50 truncate font-mono mt-1">{log.target}</p>
                               </div>
                            </div>
                          ))}
@@ -578,16 +578,16 @@ export function AdminView() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-6 border-t border-black/5 flex gap-3">
+            <div className="p-5 md:p-6 border-t border-black/5 flex flex-col sm:flex-row gap-3">
               <button 
                 onClick={handleSaveProfile}
-                className="flex-1 bg-brand text-white py-3 rounded-xl font-bold text-sm shadow-xl shadow-brand/20 hover:bg-brand-dark transition-all"
+                className="flex-1 bg-brand text-white py-3.5 rounded-xl font-bold text-sm shadow-xl shadow-brand/20 hover:bg-brand-dark transition-all order-1 sm:order-2"
               >
                 Save Changes
               </button>
               <button 
                 onClick={() => setEditingMember(null)}
-                className="flex-1 bg-paper text-ink/40 py-3 rounded-xl font-bold text-sm hover:bg-black/5 transition-all"
+                className="flex-1 bg-paper text-ink/40 py-3.5 rounded-xl font-bold text-sm hover:bg-black/5 transition-all order-2 sm:order-1"
               >
                 Cancel
               </button>

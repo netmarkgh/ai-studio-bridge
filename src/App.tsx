@@ -3,6 +3,7 @@ import { useAuth } from './contexts/AuthContext';
 import { AuthScreen } from './components/AuthScreen';
 import { Sidebar, TabId } from './components/Sidebar';
 import { motion, AnimatePresence } from 'motion/react';
+import { Menu } from 'lucide-react';
 
 // Specialized Views
 import { Dashboard } from './views/Dashboard';
@@ -112,14 +113,11 @@ export default function App() {
         <div className="lg:hidden h-14 bg-white border-b border-black/5 flex items-center px-4 sticky top-0 z-30 no-print">
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 -ml-2 text-ink/60 hover:text-ink transition-colors"
+            className="p-2 -ml-2 text-ink/60 hover:text-ink transition-colors flex items-center justify-center"
           >
-            <div className="w-5 h-0.5 bg-current rounded-full mb-1" />
-            <div className="w-5 h-0.5 bg-current rounded-full mb-1" />
-            <div className="w-5 h-0.5 bg-current rounded-full" />
+            <Menu className="w-6 h-6" />
           </button>
-          <div className="flex-1 text-center font-bold text-brand tracking-tighter">NMG</div>
-          <div className="w-9" /> {/* Spacer */}
+          <div className="flex-1 text-center font-bold text-brand tracking-tighter text-xl pr-8">NMG</div>
         </div>
 
         <AnimatePresence mode="wait">

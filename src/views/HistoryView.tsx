@@ -66,30 +66,32 @@ export function HistoryView() {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto">
       <div className="no-print">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-ink">Invoice History</h1>
             <p className="text-ink/40 text-sm mt-1">{filteredInvoices.length} invoices found</p>
           </div>
-          <div className="flex gap-3">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1 sm:flex-none">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/30" />
               <input 
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by client or #"
-                className="pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand w-64"
+                className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
               />
             </div>
-            <div className="relative group">
-               <button className="px-4 py-2 bg-white border border-black/5 rounded-xl text-sm font-semibold flex items-center gap-2">
-                 <Filter className="w-4 h-4 text-ink/30" />
-                 <span className="capitalize">{filter}</span>
+            <div className="relative group flex-1 sm:flex-none">
+               <button className="w-full px-4 py-2 bg-white border border-black/5 rounded-xl text-sm font-semibold flex items-center justify-between sm:justify-start gap-2">
+                 <div className="flex items-center gap-2">
+                   <Filter className="w-4 h-4 text-ink/30" />
+                   <span className="capitalize">{filter}</span>
+                 </div>
                  <ChevronDown className="w-3 h-3 text-ink/30" />
                </button>
-               <div className="absolute right-0 top-full mt-2 w-40 bg-white border border-black/5 rounded-xl shadow-xl z-20 overflow-hidden opacity-0 invisible group-focus-within:visible group-focus-within:opacity-100 transition-all">
+               <div className="absolute right-0 top-full mt-2 w-full sm:w-40 bg-white border border-black/5 rounded-xl shadow-xl z-20 overflow-hidden opacity-0 invisible group-focus-within:visible group-focus-within:opacity-100 transition-all">
                  {['all', 'paid', 'unpaid', 'overdue', 'draft'].map(s => (
                    <button 
                     key={s} 
@@ -104,7 +106,8 @@ export function HistoryView() {
           </div>
         </div>
 
-        <div className="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
+        {/* Table View (Desktop) */}
+        <div className="hidden md:block bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-paper border-b border-black/5">
@@ -190,6 +193,66 @@ export function HistoryView() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Card View (Mobile) */}
+        <div className="md:hidden space-y-4">
+          {loading ? (
+             <div className="px-6 py-20 text-center text-ink/20 animate-pulse font-bold">Loading records...</div>
+          ) : filteredInvoices.length === 0 ? (
+             <div className="px-6 py-20 text-center text-ink/30 italic">No records to display.</div>
+          ) : (
+            filteredInvoices.map((inv) => (
+              <div key={inv.id} className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-mono text-[10px] font-bold text-brand">{inv.inv_number}</div>
+                    <div className="font-bold text-ink mt-1">{inv.client_name}</div>
+                    <div className="text-xs text-ink/40 mt-1">Issued: {inv.inv_date}</div>
+                  </div>
+                  <span className={cn(
+                    "text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md",
+                    inv.status === 'paid' ? 'bg-brand/10 text-brand' : 
+                    inv.status === 'overdue' ? 'bg-red-500/10 text-red-500' : 
+                    'bg-amber-500/10 text-amber-500'
+                  )}>
+                    {inv.status}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-end pt-4 border-t border-black/5">
+                  <div>
+                    <div className="text-[10px] text-ink/30 uppercase tracking-tight font-bold">Total Amount</div>
+                    <div className="text-lg font-bold font-mono text-ink leading-tight">{formatCurrency(inv.total, inv.currency)}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setSelectedInvoice(inv)}
+                      className="p-2.5 bg-paper rounded-xl text-brand transition-colors"
+                    >
+                       <Eye className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={() => handleShareWA(inv)}
+                      className="p-2.5 bg-paper rounded-xl text-[#25D366] transition-colors"
+                    >
+                       <Smartphone className="w-5 h-5" />
+                    </button>
+                    <div className="relative group/menu">
+                      <button className="p-2.5 bg-paper rounded-xl text-ink/40 transition-colors">
+                         <MoreHorizontal className="w-5 h-5" />
+                      </button>
+                      <div className="absolute right-0 bottom-full mb-2 w-32 bg-white border border-black/5 rounded-xl shadow-xl z-30 overflow-hidden opacity-0 invisible group-focus-within:visible group-focus-within:opacity-100 transition-all">
+                         <button onClick={() => updateStatus(inv.id, 'paid')} className="w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-paper">Mark Paid</button>
+                         <button onClick={() => updateStatus(inv.id, 'unpaid')} className="w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-amber-600 hover:bg-paper">Mark Unpaid</button>
+                         <button onClick={() => deleteInvoice(inv.id)} className="w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:bg-paper border-t border-black/5">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <InvoicePreviewModal 

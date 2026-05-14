@@ -8,7 +8,9 @@ import {
   TrendingUp, 
   ShieldCheck,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Menu,
+  X
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { cn, getInitials } from '../lib/utils';
@@ -62,7 +64,7 @@ export function Sidebar({ activeTab, onTabChange, isOpen, onClose }: SidebarProp
         isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Brand */}
-      <div className="p-6 border-b border-black/5 flex items-center gap-3">
+      <div className="p-6 border-b border-black/5 flex items-center gap-3 relative">
         <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center text-white font-bold text-lg overflow-hidden shrink-0 shadow-lg shadow-brand/20">
           {profile?.logo_url ? (
             <img src={profile.logo_url} alt="Logo" className="w-full h-full object-cover" />
@@ -70,12 +72,20 @@ export function Sidebar({ activeTab, onTabChange, isOpen, onClose }: SidebarProp
             <span>{getInitials(profile?.biz_name || 'NMG')[0]}</span>
           )}
         </div>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden flex-1">
           <div className="font-semibold text-sm truncate">{profile?.biz_name || 'NMG'}</div>
           <div className="text-[10px] text-ink/40 uppercase tracking-wider font-medium">
             {profile?.role === 'admin' ? 'Admin' : 'Member'}
           </div>
         </div>
+        
+        {/* Close Button Mobile Only */}
+        <button 
+          onClick={onClose}
+          className="lg:hidden p-2 text-ink/30 hover:text-ink transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Nav */}

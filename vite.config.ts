@@ -7,9 +7,8 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react(), tailwindcss()],
-    // If you are deploying to GitHub Pages at https://<USERNAME>.github.io/<REPO>/
-    // uncomment the line below and set it to your repository name:
-    base: '/nmgpinvoice/',
+    // Use relative paths for better stability on different deployment environments (e.g. GitHub Pages)
+    base: './',
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },

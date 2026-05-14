@@ -117,22 +117,22 @@ export function Dashboard({ onNewInvoice, onViewHistory }: { onNewInvoice: () =>
           ) : (
             <div className="grid gap-3">
               {invoices.slice(0, 5).map((inv) => (
-                <div key={inv.id} className="bg-white border border-black/5 px-6 py-4 rounded-2xl flex items-center justify-between hover:border-brand/40 transition-all group">
-                  <div className="flex items-center gap-5">
-                    <div className="w-10 h-10 rounded-xl bg-paper flex items-center justify-center text-xs font-bold text-ink/30 group-hover:bg-brand/5 group-hover:text-brand transition-colors">
+                <div key={inv.id} className="bg-white border border-black/5 px-4 md:px-6 py-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between hover:border-brand/40 transition-all group gap-4">
+                  <div className="flex items-center gap-4 md:gap-5 flex-1">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-paper shrink-0 flex items-center justify-center text-xs font-bold text-ink/30 group-hover:bg-brand/5 group-hover:text-brand transition-colors">
                       {inv.client_name.slice(0, 1)}
                     </div>
-                    <div>
-                      <div className="font-mono text-xs text-ink/40 mb-0.5">{inv.inv_number}</div>
-                      <div className="font-semibold text-sm">{inv.client_name}</div>
+                    <div className="min-w-0">
+                      <div className="font-mono text-[10px] md:text-xs text-ink/40 mb-0.5">{inv.inv_number}</div>
+                      <div className="font-semibold text-sm truncate">{inv.client_name}</div>
                       <div className="text-[10px] text-ink/40 mt-1">{inv.inv_date}</div>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-0 border-black/5 pt-3 sm:pt-0">
                     <div className="font-bold font-mono group-hover:text-brand transition-colors">
                       {formatCurrency(inv.total, inv.currency)}
                     </div>
-                    <div className="mt-1.5 flex justify-end">
+                    <div className="sm:mt-1.5">
                       <span className={cn(
                         "text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md",
                         inv.status === 'paid' ? 'bg-brand/10 text-brand' : 

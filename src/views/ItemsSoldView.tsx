@@ -126,41 +126,43 @@ export function ItemsSoldView() {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink">Items Sold</h1>
           <p className="text-ink/40 text-sm mt-1">Inventory tracking and sales performance</p>
         </div>
-        <div className="flex gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/30" />
             <input 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search items or clients..."
-              className="pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand w-64"
+              className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
             />
           </div>
           <div className="bg-white border border-black/5 p-1 rounded-xl flex gap-1">
              <button 
               onClick={() => setGroupBy('item')}
-              className={cn("p-1.5 rounded-lg transition-all", groupBy === 'item' ? "bg-brand text-white shadow-sm" : "hover:bg-paper text-ink/40")}
+              className={cn("flex-1 sm:flex-none p-1.5 rounded-lg transition-all flex items-center justify-center", groupBy === 'item' ? "bg-brand text-white shadow-sm" : "hover:bg-paper text-ink/40")}
              >
                <Package className="w-4 h-4" />
+               <span className="sm:hidden ml-2 text-xs font-bold uppercase tracking-wider">By Item</span>
              </button>
              <button 
               onClick={() => setGroupBy('client')}
-              className={cn("p-1.5 rounded-lg transition-all", groupBy === 'client' ? "bg-brand text-white shadow-sm" : "hover:bg-paper text-ink/40")}
+              className={cn("flex-1 sm:flex-none p-1.5 rounded-lg transition-all flex items-center justify-center", groupBy === 'client' ? "bg-brand text-white shadow-sm" : "hover:bg-paper text-ink/40")}
              >
                <BarChart3 className="w-4 h-4" />
+               <span className="sm:hidden ml-2 text-xs font-bold uppercase tracking-wider">By Client</span>
              </button>
           </div>
         </div>
       </div>
 
       {/* Summary Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
         <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
            <div className="text-[10px] font-bold text-ink/40 uppercase tracking-widest mb-1">Total Lines</div>
            <div className="text-2xl font-bold text-ink">{filtered.length}</div>
@@ -169,7 +171,7 @@ export function ItemsSoldView() {
            <div className="text-[10px] font-bold text-ink/40 uppercase tracking-widest mb-1">Total Qty</div>
            <div className="text-2xl font-bold text-brand">{totalQty}</div>
         </div>
-        <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
+        <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm sm:col-span-2 md:col-span-1">
            <div className="text-[10px] font-bold text-ink/40 uppercase tracking-widest mb-1">Total Value</div>
            <div className="text-2xl font-bold font-mono text-brand">{formatCurrency(totalVal, profile?.currency)}</div>
         </div>
