@@ -204,13 +204,13 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
         {/* Editor Side */}
-        <div className="space-y-6 no-print">
+        <div className="space-y-6 no-print order-2 lg:order-1">
           {/* Section: Client */}
-          <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="bg-white border border-black/5 p-4 md:p-6 rounded-2xl shadow-sm space-y-4">
             <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2">Bill To — Client</div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Client Name</label>
                 <input 
@@ -229,7 +229,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                       }));
                     }
                   }}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                   placeholder="Client Name"
                 />
                 <datalist id="clients-list">
@@ -241,18 +241,18 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                 <input 
                   value={form.clientPhone}
                   onChange={(e) => setForm(prev => ({ ...prev, clientPhone: e.target.value }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                   placeholder="Client Phone"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Client Email</label>
                 <input 
                   value={form.clientEmail}
                   onChange={(e) => setForm(prev => ({ ...prev, clientEmail: e.target.value }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                   placeholder="client@email.com"
                 />
               </div>
@@ -261,7 +261,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                 <input 
                   value={form.clientAddress}
                   onChange={(e) => setForm(prev => ({ ...prev, clientAddress: e.target.value }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                   placeholder="Client Address"
                 />
               </div>
@@ -269,16 +269,16 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
           </div>
 
           {/* Section: Invoice Details */}
-          <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="bg-white border border-black/5 p-4 md:p-6 rounded-2xl shadow-sm space-y-4">
             <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2">Invoice Details</div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Invoice Date</label>
                 <input 
                   type="date"
                   value={form.invDate}
                   onChange={(e) => setForm(prev => ({ ...prev, invDate: e.target.value }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                 />
               </div>
               <div className="space-y-1">
@@ -287,17 +287,17 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                   type="date"
                   value={form.dueDate}
                   onChange={(e) => setForm(prev => ({ ...prev, dueDate: e.target.value }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-ink/40 uppercase ml-1">Currency</label>
                 <select 
                   value={form.currency}
                   onChange={(e) => setForm(prev => ({ ...prev, currency: e.target.value }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                 >
                   <option value="GHS">GHS</option>
                   <option value="USD">USD</option>
@@ -310,7 +310,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                 <select 
                   value={form.status}
                   onChange={(e) => setForm(prev => ({ ...prev, status: e.target.value as any }))}
-                  className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                  className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                 >
                   <option value="unpaid">Unpaid</option>
                   <option value="paid">Paid</option>
@@ -324,59 +324,62 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
               <input 
                 value={form.reference}
                 onChange={(e) => setForm(prev => ({ ...prev, reference: e.target.value }))}
-                className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
                 placeholder="NMGConnects"
               />
             </div>
           </div>
 
           {/* Section: Items */}
-          <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="bg-white border border-black/5 p-4 md:p-6 rounded-2xl shadow-sm space-y-4">
             <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30 mb-2 font-sans">Line Items</div>
-            <div className="space-y-3">
+            <div className="space-y-6 md:space-y-3">
               {items.map((item, index) => (
-                <div key={item.id} className="grid grid-cols-2 md:grid-cols-[1fr_60px_100px_80px_32px] gap-3 items-end">
-                  <div className="col-span-2 md:col-span-1 space-y-1">
-                    {index === 0 && <label className="text-[9px] font-bold text-ink/40 uppercase ml-1">Description</label>}
+                <div key={item.id} className="grid grid-cols-12 gap-3 items-end">
+                  <div className="col-span-12 md:col-span-5 space-y-1">
+                    {index === 0 && <label className="hidden md:block text-[9px] font-bold text-ink/40 uppercase ml-1">Description</label>}
                     <input 
                       value={item.description}
                       onChange={(e) => updateItem(item.id!, 'description', e.target.value)}
-                      className="w-full px-4 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                      className="w-full px-4 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none focus:border-brand"
+                      placeholder="Item description"
                     />
                   </div>
-                  <div className="space-y-1">
-                    {index === 0 && <label className="text-[9px] font-bold text-ink/40 uppercase ml-1 text-right">Qty</label>}
+                  <div className="col-span-3 md:col-span-2 space-y-1">
+                    {index === 0 && <label className="hidden md:block text-[9px] font-bold text-ink/40 uppercase ml-1 text-right">Qty</label>}
                     <input 
                       type="number"
                       value={item.quantity}
                       onChange={(e) => updateItem(item.id!, 'quantity', parseInt(e.target.value))}
-                      className="w-full px-3 py-2 bg-paper border border-black/5 rounded-xl text-sm text-right focus:outline-none focus:border-brand"
+                      className="w-full px-3 py-2.5 bg-paper border border-black/5 rounded-xl text-sm text-right focus:outline-none focus:border-brand"
                     />
                   </div>
-                  <div className="space-y-1">
-                    {index === 0 && <label className="text-[9px] font-bold text-ink/40 uppercase ml-1 text-right">Unit Price</label>}
+                  <div className="col-span-4 md:col-span-2 space-y-1">
+                    {index === 0 && <label className="hidden md:block text-[9px] font-bold text-ink/40 uppercase ml-1 text-right">Unit Price</label>}
                     <input 
                       type="number"
                       value={item.unit_price}
                       onChange={(e) => updateItem(item.id!, 'unit_price', parseFloat(e.target.value))}
-                      className="w-full px-3 py-2 bg-paper border border-black/5 rounded-xl text-sm text-right focus:outline-none focus:border-brand font-mono"
+                      className="w-full px-3 py-2.5 bg-paper border border-black/5 rounded-xl text-sm text-right focus:outline-none focus:border-brand font-mono"
                     />
                   </div>
-                  <div className="h-9 flex items-center justify-end font-mono text-xs font-bold text-ink/60">
+                  <div className="col-span-4 md:col-span-2 h-10 flex items-center justify-end font-mono text-xs font-bold text-brand">
                     {(item.amount || 0).toFixed(2)}
                   </div>
-                  <button 
-                    onClick={() => removeItem(item.id!)}
-                    className="h-9 flex items-center justify-center text-red-400 hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="col-span-1 md:col-span-1 flex items-center justify-end">
+                    <button 
+                      onClick={() => removeItem(item.id!)}
+                      className="p-2 text-red-400 hover:text-red-500 transition-colors bg-red-50 hover:bg-red-100 rounded-lg"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
               <div className="flex justify-center pt-2">
                 <button 
                   onClick={addItem}
-                  className="text-brand text-xs font-bold hover:underline"
+                  className="bg-brand/10 text-brand px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-brand hover:text-white transition-all"
                 >
                   + Add line item
                 </button>
@@ -389,19 +392,19 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                 <span className="text-ink/40">Subtotal</span>
                 <span className="font-mono font-bold">{formatCurrency(subtotal, form.currency)}</span>
               </div>
-              <div className="flex justify-between items-center text-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-ink/40">Discount</span>
                   <input 
                     type="number"
                     value={form.discountValue}
                     onChange={(e) => setForm(prev => ({ ...prev, discountValue: parseFloat(e.target.value) || 0 }))}
-                    className="w-16 px-2 py-1 bg-paper border border-black/5 rounded-md text-xs text-right focus:outline-none"
+                    className="w-16 px-2 py-1.5 bg-paper border border-black/5 rounded-md text-xs text-right focus:outline-none"
                   />
                   <select 
                     value={form.discountType}
                     onChange={(e) => setForm(prev => ({ ...prev, discountType: e.target.value as any }))}
-                    className="px-1 py-1 bg-paper border border-black/5 rounded-md text-[10px] focus:outline-none"
+                    className="px-1 py-1.5 bg-paper border border-black/5 rounded-md text-[10px] focus:outline-none"
                   >
                     <option value="pct">% perc</option>
                     <option value="flat">Fixed</option>
@@ -409,14 +412,14 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                 </div>
                 <span className="font-mono text-brand font-bold">-{formatCurrency(discount, form.currency)}</span>
               </div>
-              <div className="flex justify-between items-center text-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-ink/40">Tax Rate (%)</span>
                   <input 
                     type="number"
                     value={form.taxRate}
                     onChange={(e) => setForm(prev => ({ ...prev, taxRate: parseFloat(e.target.value) || 0 }))}
-                    className="w-16 px-2 py-1 bg-paper border border-black/5 rounded-md text-xs text-right focus:outline-none"
+                    className="w-16 px-2 py-1.5 bg-paper border border-black/5 rounded-md text-xs text-right focus:outline-none"
                   />
                 </div>
                 <span className="font-mono font-bold">+{formatCurrency(tax, form.currency)}</span>
@@ -429,7 +432,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
           </div>
           
           {/* Section: Payment & Notes */}
-          <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm grid grid-cols-2 gap-6">
+          <div className="bg-white border border-black/5 p-4 md:p-6 rounded-2xl shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="text-[10px] uppercase tracking-widest font-bold text-ink/30">Payment Details</div>
               <div className="space-y-3">
@@ -438,7 +441,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                   <select 
                     value={form.payMethod}
                     onChange={(e) => setForm(prev => ({ ...prev, payMethod: e.target.value }))}
-                    className="w-full px-3 py-2 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none"
+                    className="w-full px-3 py-2.5 bg-paper border border-black/5 rounded-xl text-sm focus:outline-none"
                   >
                     <option>MTN Mobile Money</option>
                     <option>Vodafone Cash</option>
@@ -452,7 +455,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
                   <input 
                     value={form.accNumber}
                     onChange={(e) => setForm(prev => ({ ...prev, accNumber: e.target.value }))}
-                    className="w-full px-3 py-2 bg-paper border border-black/5 rounded-xl text-sm"
+                    className="w-full px-3 py-2.5 bg-paper border border-black/5 rounded-xl text-sm"
                   />
                 </div>
               </div>
@@ -462,7 +465,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
               <textarea 
                 value={form.note}
                 onChange={(e) => setForm(prev => ({ ...prev, note: e.target.value }))}
-                className="w-full h-24 px-3 py-2 bg-paper border border-black/5 rounded-xl text-sm resize-none"
+                className="w-full h-24 px-3 py-2.5 bg-paper border border-black/5 rounded-xl text-sm resize-none"
                 placeholder="Note to client..."
               />
             </div>
@@ -470,7 +473,7 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
         </div>
 
         {/* Live Preview Side */}
-        <div className="sticky top-8 space-y-4">
+        <div className="lg:sticky lg:top-8 space-y-4 order-1 lg:order-2">
           <div className="flex items-center justify-between px-2">
             <span className="text-[10px] uppercase tracking-widest font-bold text-ink/30 font-sans">Live Preview</span>
             <div className={cn(
@@ -481,105 +484,107 @@ export function InvoiceBuilder({ onSuccess, initialClientName }: InvoiceBuilderP
             </div>
           </div>
           
-          <div id="printable-invoice" className="bg-white border border-black/5 aspect-[1/1.414] shadow-2xl rounded-2xl p-10 font-sans overflow-hidden print-shadow-none print:w-full print:border-none print:p-0">
+          <div id="printable-invoice" className="bg-white border border-black/5 shadow-2xl rounded-2xl p-6 md:p-10 font-sans overflow-hidden print-shadow-none print:w-full print:border-none print:p-0 min-h-[500px] lg:min-h-[1056px]">
              {/* Header */}
-             <div className="flex justify-between items-start border-b-[2.5px] border-brand pb-6 mb-6">
+             <div className="flex justify-between items-start border-b-[2px] border-brand pb-6 mb-6">
                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-brand rounded-xl flex items-center justify-center text-white font-bold text-xl overflow-hidden shrink-0 shadow-lg shadow-brand/20">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-brand rounded-xl flex items-center justify-center text-white font-bold text-lg md:text-xl overflow-hidden shrink-0 shadow-lg shadow-brand/20">
                     {profile?.logo_url ? <img src={profile.logo_url} className="w-full h-full object-cover" /> : <span>{getInitials(form.bizName)[0]}</span>}
                   </div>
                   <div>
-                    <div className="text-lg font-bold text-brand leading-tight">{form.bizName}</div>
-                    <div className="text-[10px] text-ink/50 mt-1 max-w-[200px]">{form.bizAddress}</div>
-                    <div className="text-[10px] text-ink/50">{form.bizEmail} · {form.bizPhone}</div>
+                    <div className="text-base md:text-lg font-bold text-brand leading-tight">{form.bizName}</div>
+                    <div className="text-[10px] text-ink/50 mt-1 max-w-[200px] leading-tight">{form.bizAddress}</div>
+                    <div className="text-[10px] text-ink/50 mt-0.5">{form.bizEmail} · {form.bizPhone}</div>
                   </div>
                </div>
                <div className="text-right">
                  <div className="bg-brand-light text-brand px-3 py-1 rounded-md text-[10px] font-bold tracking-widest inline-block">INVOICE</div>
-                 <div className="font-mono text-[11px] text-ink/40 mt-1.5 uppercase tracking-tighter">NMG-0000</div>
+                 <div className="font-mono text-[11px] text-ink/40 mt-1.5 uppercase tracking-tighter">PREVIEW</div>
                  <div className="text-[10px] text-ink/40 mt-0.5">{form.invDate}</div>
                </div>
              </div>
 
              {/* Parties */}
-             <div className="grid grid-cols-2 gap-8 mb-8">
+             <div className="grid grid-cols-2 gap-4 md:gap-8 mb-8">
                <div>
                  <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2">BILLED TO</div>
-                 <div className="font-bold text-sm text-ink">{form.clientName || '—'}</div>
+                 <div className="font-bold text-xs md:text-sm text-ink">{form.clientName || '—'}</div>
                  <div className="text-[10px] text-ink/50 mt-1">{form.clientPhone}</div>
                  <div className="text-[10px] text-ink/50">{form.clientAddress}</div>
                </div>
                <div className="text-right">
                  <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2">DUE DATE</div>
-                 <div className="font-bold text-sm text-ink">{form.dueDate}</div>
+                 <div className="font-bold text-xs md:text-sm text-ink">{form.dueDate}</div>
                  {form.reference && (
-                  <>
-                    <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-2 mt-4">REFERENCE</div>
-                    <div className="text-xs text-ink/60">{form.reference}</div>
-                  </>
+                  <div className="mt-4">
+                    <div className="text-[9px] font-bold uppercase tracking-widest text-ink/30 mb-1">REFERENCE</div>
+                    <div className="text-[10px] text-ink/60">{form.reference}</div>
+                  </div>
                  )}
                </div>
              </div>
 
              {/* Table */}
-             <table className="w-full text-left border-collapse mb-6">
-                <thead>
-                  <tr className="border-b border-black/5">
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider">Description</th>
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-12">Qty</th>
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24">Unit Price</th>
-                    <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24 text-brand">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-black/5">
-                  {items.map((it, idx) => (
-                    <tr key={idx}>
-                      <td className="py-3 text-[11px] font-medium text-ink pr-4">{it.description || '—'}</td>
-                      <td className="py-3 text-[11px] text-ink text-right">{it.quantity}</td>
-                      <td className="py-3 text-[11px] text-ink text-right">{formatCurrency(it.unit_price || 0, form.currency)}</td>
-                      <td className="py-3 text-[11px] text-brand text-right font-bold">{formatCurrency(it.amount || 0, form.currency)}</td>
+             <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+               <table className="w-full text-left border-collapse mb-6 min-w-[300px] sm:min-w-0">
+                  <thead>
+                    <tr className="border-b border-black/5">
+                      <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider">Description</th>
+                      <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-12">Qty</th>
+                      <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24">Unit Price</th>
+                      <th className="py-2 text-[9px] font-bold text-ink/30 uppercase tracking-wider text-right w-24 text-brand">Amount</th>
                     </tr>
-                  ))}
-                </tbody>
-             </table>
+                  </thead>
+                  <tbody className="divide-y divide-black/5">
+                    {items.map((it, idx) => (
+                      <tr key={idx}>
+                        <td className="py-3 text-[10px] md:text-[11px] font-medium text-ink pr-4">{it.description || '—'}</td>
+                        <td className="py-3 text-[10px] md:text-[11px] text-ink text-right">{it.quantity}</td>
+                        <td className="py-3 text-[10px] md:text-[11px] text-ink text-right">{formatCurrency(it.unit_price || 0, form.currency)}</td>
+                        <td className="py-3 text-[10px] md:text-[11px] text-brand text-right font-bold">{formatCurrency(it.amount || 0, form.currency)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+               </table>
+             </div>
 
              {/* Calculations */}
              <div className="flex flex-col items-end gap-1.5 mb-8">
-               <div className="flex gap-10 text-[11px] text-ink/60">
+               <div className="flex justify-between sm:justify-end gap-10 text-[10px] md:text-[11px] text-ink/60 w-full sm:w-auto">
                  <span>Subtotal</span>
                  <span className="font-mono text-right w-24">{formatCurrency(subtotal, form.currency)}</span>
                </div>
                {discount > 0 && (
-                 <div className="flex gap-10 text-[11px] text-brand">
+                 <div className="flex justify-between sm:justify-end gap-10 text-[10px] md:text-[11px] text-brand w-full sm:w-auto">
                    <span>Discount</span>
                    <span className="font-mono text-right w-24">-{formatCurrency(discount, form.currency)}</span>
                  </div>
                )}
                {tax > 0 && (
-                 <div className="flex gap-10 text-[11px] text-ink/60">
+                 <div className="flex justify-between sm:justify-end gap-10 text-[10px] md:text-[11px] text-ink/60 w-full sm:w-auto">
                    <span>Tax ({form.taxRate}%)</span>
                    <span className="font-mono text-right w-24">+{formatCurrency(tax, form.currency)}</span>
                  </div>
                )}
-               <div className="flex gap-10 pt-2 border-t border-black/5 mt-1">
-                 <span className="font-bold text-ink">Total</span>
-                 <span className="font-mono text-lg font-bold text-brand w-24 text-right leading-none">{formatCurrency(total, form.currency)}</span>
+               <div className="flex justify-between sm:justify-end gap-10 pt-2 border-t border-black/5 mt-1 w-full sm:w-auto">
+                 <span className="font-bold text-ink text-[11px] md:text-xs">Total</span>
+                 <span className="font-mono text-base md:text-lg font-bold text-brand w-24 text-right leading-none">{formatCurrency(total, form.currency)}</span>
                </div>
              </div>
 
              {/* Footer Pay Info */}
-             <div className="py-4 border-b border-black/5 text-xs mb-8">
+             <div className="py-4 border-b border-black/5 text-[10px] mb-8">
                 <div className="text-[8px] font-bold uppercase tracking-widest text-ink/30 mb-2">PAYMENT VIA</div>
                 <div className="font-bold text-ink">{form.payMethod}</div>
-                {form.accNumber && <div className="text-ink/60 text-[10px] mt-1">{form.accNumber} ({form.accName})</div>}
+                {form.accNumber && <div className="text-ink/60 text-[9px] mt-1">{form.accNumber} ({form.accName})</div>}
              </div>
 
-             <div className="mt-auto pt-4 flex justify-between items-end">
+             <div className="mt-auto pt-4 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 text-center sm:text-left">
                <div className="space-y-1">
-                 <div className="text-[10px] text-ink/40">Thank you for your business!</div>
-                 <div className="text-[10px] text-ink/40">Payment due within 7 days.</div>
+                 <div className="text-[9px] text-ink/40">Thank you for your business!</div>
+                 <div className="text-[9px] text-ink/40">Payment due within 7 days.</div>
                </div>
-               <div className="text-[8px] font-mono text-ink/20 text-right uppercase tracking-widest">
+               <div className="text-[8px] font-mono text-ink/20 uppercase tracking-widest">
                  Generated by Net-Marketing Ghana(NMG)
                </div>
              </div>
